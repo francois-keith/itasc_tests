@@ -1,0 +1,9 @@
+<stack>
+  <description brief="itasc_tests">itasc_tests</description>
+  <author>Maintained by Dominick Vanthienen</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/itasc_tests</url>
+  <depend stack="ros" />
+
+</stack>
