@@ -1,0 +1,100 @@
+# deploy script, call with corresponding bash script
+require("print")
+
+#### import components, requires correctly setup RTT_COMPONENT_PATH or ROS_PACKAGE_PATH
+import("ocl")
+import("kdl_typekit")
+import("rtt_tf")
+import("rtt_rosnode")
+
+#import the iTaSC core
+import("itasc_core")
+import("itasc_pr2")
+
+#### load components
+loadComponent("Timer","OCL::TimerComponent")
+loadComponent("test_supervisor","OCL::LuaComponent")
+loadComponent("pr2robot","iTaSC::pr2Robot")
+loadComponent("pr2connector","iTaSC::pr2connect")
+loadComponent("rtt_tf", "rtt_tf::RTT_TF")
+
+#### set activities
+# create activity for producer: period=0.01, priority=0, sched type
+setActivity("test_supervisor",		0.0,	99, ORO_SCHED_RT)
+setActivity("pr2robot",				0.0,	98, ORO_SCHED_RT)
+setActivity("pr2connector",			0.0,	99, ORO_SCHED_RT)
+setActivity("rtt_tf",				0.0,	98, ORO_SCHED_RT)
+
+#### connect peers
+connectPeers("test_supervisor","Timer")
+connectPeers("test_supervisor","itasc_supervisor")
+addPeer("test_supervisor","Deployer")
+connectPeers("test_supervisor","rtt_tf")
+connectPeers("test_supervisor","pr2connector")
+connectPeers("test_supervisor","pr2robot")
+
+connectPeers("pr2connector", "rtt_tf")
+
+#### lua stuff 
+# execute lua files
+#(important that it is before loading property files)
+test_supervisor.exec_file(rospack.find("itasc_robot_pr2_test") + "/scripts/test_supervisor.lua")
+
+#configure lua components (already here so they can create the ports and properties before we connect/load them)
+test_supervisor.configure
+
+#### load property files
+loadService("test_supervisor","marshalling")
+loadService("pr2robot","marshalling")
+loadService("pr2connector","marshalling")
+
+print.ln("[run.ops] loading properties")
+pr2robot.marshalling.updateProperties(rospack.find("itasc_pr2") + "/cpf/pr2robot.cpf")
+pr2connector.marshalling.updateProperties(rospack.find("itasc_pr2") + "/cpf/pr2connect.cpf")
+print.ln("[run.ops] robots props loaded")
+test_supervisor.marshalling.updateProperties(rospack.find("itasc_robot_pr2_test") + "/cpf/test_supervisor.cpf")
+
+#### connect ports
+#### TOT HIER AANGEPAST-------------------------------------------------------
+# create connectionPolicies
+
+var ConnPolicy cp
+
+var ConnPolicy bufferedcp
+bufferedcp.type=1
+bufferedcp.size=32
+
+var ConnPolicy bufferedcp2
+bufferedcp2.type=1
+bufferedcp2.size=32
+# lock_policy necessary???
+bufferedcp2.lock_policy=1
+
+# connect ports
+connect("test_supervisor.trigger","Timer.timeout",cp)
+
+# pr2connect ports with ros-controllers must be connected_AFTER_ pr2connect is configured -> moved to ApplicationFSM::StartingApplication
+var ConnPolicy roscp
+roscp.transport = 3
+# connect the jointstate topic to the pr2connector
+roscp.name_id = "/joint_states"
+stream("pr2connector.joint_state_from_robot", roscp)
+
+connect("pr2robot.q_from_robot", "pr2connector.q_msr_std", cp)
+connect("pr2robot.qdot_to_robot", "pr2connector.qdot_in", cp)
+connect("pr2robot.joint_names", "pr2connector.joint_names", cp)
+connect("pr2robot.deltaqdot_in", "pr2connector.deltaqdot", cp)
+
+# configure components
+Timer.configure()
+
+# start components 
+Timer.start()
+
+# order is of importance! First tasks, then itasc_supervisor, then application_supervisor !!
+test_supervisor.start
+
+# Set up timer
+Timer.startTimer(test_supervisor.test_timer_id,0.01)
+
+scripting.loadPrograms(rospack.find("itasc_pr2") + "/scripts/program_connectports.ops")

@@ -1,0 +1,12 @@
+<package>
+    <description brief="Orocos itasc_robot_pr2_test Component package">
+        This package contains an application to test the itasc_pr2 component
+    </description>
+    <license>BSD/LGPL</license>
+    <author>Dominick Vanthienen</author>
+    <depend package="rtt" />
+    <depend package="orocos_kdl" />
+    <depend package="itasc_pr2" />
+  <rosdep name="xacro"/>
+</package>
+
