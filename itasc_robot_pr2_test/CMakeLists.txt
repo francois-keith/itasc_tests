@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.6.3)
+
 project(itasc_robot_pr2_test)
 
 set (ROS_ROOT $ENV{ROS_ROOT} )
@@ -8,6 +9,7 @@ if (ROS_ROOT)
   rosbuild_find_ros_package( rtt )
   set( RTT_HINTS HINTS ${rtt_PACKAGE_PATH}/../install )
 endif()
+
 find_package(OROCOS-RTT REQUIRED ${RTT_HINTS})
 
 include(${OROCOS-RTT_USE_FILE_PATH}/UseOROCOS-RTT.cmake)

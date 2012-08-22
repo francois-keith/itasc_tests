@@ -7,6 +7,20 @@
     <depend package="rtt" />
     <depend package="orocos_kdl" />
     <depend package="itasc_pr2" />
-  <rosdep name="xacro"/>
+    <depend package="rtt"/>
+    <depend package="orocos_kdl"/>
+    <depend package="kdl_typekit"/>
+    <depend package="kdl_parser"/>
+    <depend package="eigen"/>
+    <depend package="itasc_core"/>
+    <depend package="rtt_rosnode"/>
+    <depend package="rtt_std_msgs"/>
+    <depend package="rtt_pr2_controllers_msgs"/>
+    <depend package="rtt_sensor_msgs"/>
+    <depend package="geometry_msgs"/>
+    <depend package="tf"/>
+    <depend package="tf_conversions"/>
+
+    <rosdep name="xacro"/>
 </package>
 
