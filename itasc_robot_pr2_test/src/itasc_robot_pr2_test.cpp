@@ -63,6 +63,8 @@ itasc_robot_pr2_test::itasc_robot_pr2_test(const std::string& name)
 	this->ports()->addPort("jnt_to_test", jnt_value_check_to_test);
 
 
+
+	this->properties()->addProperty("epsilon", epsilon);
 	this->properties()->addProperty("base_frame",base_frame).doc(
 		"the name of the base frame of the pr2");
 
@@ -81,6 +83,9 @@ bool itasc_robot_pr2_test::configureHook(){
 		return false;
 	}
 	lookupTransform = this->getPeer("rtt_tf")->provides()->getOperation("lookupTransform");
+
+	ros_kdl_frame = KDL::Frame::Identity();
+	epsilon = (10^-12);
 	return true;
 }
 
@@ -114,11 +119,11 @@ bool itasc_robot_pr2_test::checkPoses() {
 			log(Debug) << "catched an error in rtt_tf::lookupTransform: " << ex.what() << endlog();
 #endif
 		}
-		//transformation van tf naar kdl.
-		tf::PoseMsgToKDL(stfm, ros_kdl_frame);
+		ros_kdl_frame.p = KDL::Vector(stfm.transform.translation.x,stfm.transform.translation.y,stfm.transform.translation.z);
+		ros_kdl_frame.M = KDL::Rotation::Quaternion(stfm.transform.rotation.x,stfm.transform.rotation.y,stfm.transform.rotation.z,stfm.transform.rotation.w);
 		
-		if(!KDL::Equal(itasc_kdl_frame, ros_kdl_frame, (10^-12))) {
-				//send event
+		if(!KDL::Equal(itasc_kdl_frame, ros_kdl_frame, epsilon)) {
+				//send event;
 				pose_check_to_test.write("e_check of poses failed, frames weren't equal for objectframe :" + objectFramesToBC[j]);
 				return false;
 
@@ -147,7 +152,7 @@ bool itasc_robot_pr2_test::checkJointValues() {
 		for(unsigned int j =0; j < jntstate.name.size() && !localresult; j++) {
 			if(q_names[i].compare(jntstate.name[j]) == 0){ //their names are equal! now the values should be too.
 				localresult = true;
-				if(q_array(i) != jntstate.position[j]) {
+				if(q_array(i) != jntstate.position[j]){
 					log(Error) << "values for joint " << q_names[i] << " didn't match!" << endlog();
 					//send event by writing a string on output port	
 					jnt_value_check_to_test.write("e_joint value check failed, joint values for joint " + q_names[i] + "weren't equal");

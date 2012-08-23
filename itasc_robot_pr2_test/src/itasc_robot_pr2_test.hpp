@@ -96,6 +96,7 @@ using namespace Eigen;
 		std::string base_frame;	
 		KDL::Frame ros_kdl_frame;
 		KDL::Frame itasc_kdl_frame;
+		double epsilon;
 	};
 }
 #endif
