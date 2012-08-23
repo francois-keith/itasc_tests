@@ -18,7 +18,7 @@
     <depend package="geometry_msgs"/>
     <depend package="tf"/>
     <depend package="tf_conversions"/> 
-    <depend package="tf2"/>
+ 
 
     <rosdep name="xacro"/>
 </package>
