@@ -1,4 +1,4 @@
-# deploy script, call with corresponding bash script
+# template deploy script, which can be called with corresponding bash script
 require("print")
 
 #### import components, requires correctly setup RTT_COMPONENT_PATH or ROS_PACKAGE_PATH
@@ -9,53 +9,109 @@ import("rtt_rosnode")
 
 #import the iTaSC core
 import("itasc_core")
+#import a solver
+import("wdls_prior_vel_solver")
+#import robots and object
+import("itasc_robot_pr2_test")
 import("itasc_pr2")
+import("naxes_motion_control")
+
+#application level packages
+
 
 #### load components
+#### -------------------------------------------------------
+# general components
 loadComponent("Timer","OCL::TimerComponent")
+#loadComponent("Reporter","OCL::FileReporting")
+#loadComponent("event_firer","OCL::LuaComponent")
+
+#load application level components (trajectory generators...)
 loadComponent("test_supervisor","OCL::LuaComponent")
-loadComponent("pr2robot","iTaSC::pr2Robot")
-loadComponent("pr2connector","iTaSC::pr2connect")
+loadComponent("nAxes_generator", "motion_control::nAxesGeneratorPos")
+loadComponent("nAxes_controller", "motion_control::nAxesControllerPos")
+loadComponent("TestComponent", "iTaSC::itasc_robot_pr2_test")
+
+# robot components
+loadComponent("Pr2Robot","iTaSC::pr2Robot")
+loadComponent("Pr2Connect","iTaSC::pr2connect")
+
 loadComponent("rtt_tf", "rtt_tf::RTT_TF")
 
 #### set activities
+#### -------------------------------------------------------
 # create activity for producer: period=0.01, priority=0, sched type
-setActivity("test_supervisor",		0.0,	99, ORO_SCHED_RT)
-setActivity("pr2robot",				0.0,	98, ORO_SCHED_RT)
-setActivity("pr2connector",			0.0,	99, ORO_SCHED_RT)
-setActivity("rtt_tf",				0.0,	98, ORO_SCHED_RT)
+### periodic activities (general and application level components)
+setActivity("TestComponent",				0.01,	1, ORO_SCHED_OTHER)
+setActivity("Timer",				0.01,	1, ORO_SCHED_OTHER)
+setActivity("test_supervisor",				0.01,	1, ORO_SCHED_OTHER)
+setActivity("nAxes_generator",				0.01,	1, ORO_SCHED_OTHER)
+setActivity("nAxes_controller",				0.01,	1, ORO_SCHED_OTHER)
+setActivity("Pr2Robot",				0.01,	1, ORO_SCHED_OTHER)
+setActivity("Pr2Connect",				0.01,	1, ORO_SCHED_OTHER)
+setActivity("rtt_tf",				0.0,	1, ORO_SCHED_OTHER)
+
+### non-periodic iTaSC activities
+
+# to execute programs in the deployer, like connectToControllers
+#setActivity("Deployer",				1.0,	98, ORO_SCHED_RT)
 
 #### connect peers
-connectPeers("test_supervisor","Timer")
-connectPeers("test_supervisor","itasc_supervisor")
-addPeer("test_supervisor","Deployer")
-connectPeers("test_supervisor","rtt_tf")
-connectPeers("test_supervisor","pr2connector")
-connectPeers("test_supervisor","pr2robot")
+#### -------------------------------------------------------
 
-connectPeers("pr2connector", "rtt_tf")
+#connectPeers("test_supervisor","Solver")
+
+addPeer("test_supervisor","Deployer")
+connectPeers("test_supervisor","Timer")
+connectPeers("test_supervisor","nAxes_generator")
+connectPeers("test_supervisor","TestComponent")
+connectPeers("test_supervisor","Pr2Robot")
+connectPeers("test_supervisor","Pr2Connect")
+connectPeers("test_supervisor","nAxes_controller")
+connectPeers("test_supervisor","rtt_tf")
+
+connectPeers("nAxes_generator","Timer")
+connectPeers("nAxes_generator","TestComponent")
+connectPeers("nAxes_generator","Pr2Robot")
+connectPeers("nAxes_generator","Pr2Connect")
+connectPeers("nAxes_generator","nAxes_controller")
+
+connectPeers("TestComponent","Timer")
+connectPeers("TestComponent","Pr2Robot")
+connectPeers("TestComponent","Pr2Connect")
+connectPeers("TestComponent","nAxes_controller")
+
+connectPeers("Timer","Pr2Robot")
+connectPeers("Timer","Pr2Connect")
+connectPeers("Timer","nAxes_controller")
+
+connectPeers("Pr2Robot","Pr2Connect")
+connectPeers("Pr2Robot","nAxes_controller")
+
+connectPeers("Pr2Connect","nAxes_controller")
+
+#everything connected to everything
 
 #### lua stuff 
+#### -------------------------------------------------------
 # execute lua files
-#(important that it is before loading property files)
+#(important that it is before loading property files) WHY?
+
 test_supervisor.exec_file(rospack.find("itasc_robot_pr2_test") + "/scripts/test_supervisor.lua")
 
 #configure lua components (already here so they can create the ports and properties before we connect/load them)
+
 test_supervisor.configure
 
 #### load property files
+#### -------------------------------------------------------
 loadService("test_supervisor","marshalling")
-loadService("pr2robot","marshalling")
-loadService("pr2connector","marshalling")
-
-print.ln("[run.ops] loading properties")
-pr2robot.marshalling.updateProperties(rospack.find("itasc_pr2") + "/cpf/pr2robot.cpf")
-pr2connector.marshalling.updateProperties(rospack.find("itasc_pr2") + "/cpf/pr2connect.cpf")
-print.ln("[run.ops] robots props loaded")
 test_supervisor.marshalling.updateProperties(rospack.find("itasc_robot_pr2_test") + "/cpf/test_supervisor.cpf")
 
+#test_supervisor.configure
+
 #### connect ports
-#### TOT HIER AANGEPAST-------------------------------------------------------
+#### -------------------------------------------------------
 # create connectionPolicies
 
 var ConnPolicy cp
@@ -67,34 +123,46 @@ bufferedcp.size=32
 var ConnPolicy bufferedcp2
 bufferedcp2.type=1
 bufferedcp2.size=32
-# lock_policy necessary???
 bufferedcp2.lock_policy=1
 
-# connect ports
-connect("test_supervisor.trigger","Timer.timeout",cp)
+# timer ports
+#connect("test_supervisor.trigger","Timer.timeout",cp)
 
-# pr2connect ports with ros-controllers must be connected_AFTER_ pr2connect is configured -> moved to ApplicationFSM::StartingApplication
+#connect ports of pr2 components
+connect("Pr2Robot.q_from_robot", "Pr2Connect.q_msr_std", cp)
+connect("Pr2Robot.qdot_to_robot", "Pr2Connect.qdot_in", cp)
+connect("Pr2Robot.joint_names", "Pr2Connect.joint_names", cp)
+connect("Pr2Robot.deltaqdot_in", "Pr2Connect.deltaqdot", cp)
+
+#connect port to signal finished nAxesGenerator
+connect("nAxes_generator.moveFinished", "test_supervisor.test_common_events_in", cp)
+
+#connect ports to get info for tests
+connect("test_supervisor.objectframes_out", "TestComponent.objectFramesPort", cp)
+connect("TestComponent.q_names_in", "Pr2Robot.joint_names", cp)
+connect("TestComponent.q_port_in", "Pr2Robot.q_port", cp)
+
+#connect ports for steering robot
+connect("test_supervisor.joint_positions_out", "nAxes_generator.nAxesJointPosition", cp)
+connect("nAxes_generator.nAxesDesiredPosition", "TestComponent.qdot_in", cp)
+connect("TestComponent.qdot_out","Pr2Connect.qdot_in", cp)
+
 var ConnPolicy roscp
 roscp.transport = 3
 # connect the jointstate topic to the pr2connector
 roscp.name_id = "/joint_states"
-stream("pr2connector.joint_state_from_robot", roscp)
+stream("Pr2Connect.joint_state_from_robot", roscp)
+stream("TestComponent.joint_state_from_robot", roscp)
+stream("nAxes_generator.nAxesSensorPosition", roscp)
 
-connect("pr2robot.q_from_robot", "pr2connector.q_msr_std", cp)
-connect("pr2robot.qdot_to_robot", "pr2connector.qdot_in", cp)
-connect("pr2robot.joint_names", "pr2connector.joint_names", cp)
-connect("pr2robot.deltaqdot_in", "pr2connector.deltaqdot", cp)
 
-# configure components
+# configure timers
 Timer.configure()
 
-# start components 
+# start timers 
 Timer.start()
 
-# order is of importance! First tasks, then itasc_supervisor, then application_supervisor !!
+# start the task supervisors
 test_supervisor.start
 
-# Set up timer
-Timer.startTimer(test_supervisor.test_timer_id,0.01)
 
-scripting.loadPrograms(rospack.find("itasc_pr2") + "/scripts/program_connectports.ops")

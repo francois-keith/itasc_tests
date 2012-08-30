@@ -56,6 +56,7 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <vector>
 #include <Eigen/Core>
+#include <motion_control_msgs/typekit/Types.hpp>
 
 namespace iTaSC {
 
@@ -73,6 +74,7 @@ using namespace Eigen;
 		virtual bool checkJointValues();
 		
 		virtual bool configureHook();
+		virtual void convertJointPositions();
 	
 	private:
 		RTT::InputPort<sensor_msgs::JointState> joint_state_port;
@@ -81,9 +83,14 @@ using namespace Eigen;
 		RTT::InputPort<KDL::JntArray> q_port_in;	
 		///input: vector of the names of object frames to broadcast
 		RTT::InputPort<std::vector<std::string> > objectFrames_port;
-
+		
+		RTT::InputPort<motion_control_msgs::JointPositions> desired_pos_in;
+		motion_control_msgs::JointPositions temp_desired_pos;
+		
 		RTT::OutputPort<std::string> pose_check_to_test;
 		RTT::OutputPort<std::string> jnt_value_check_to_test;
+		RTT::OutputPort<KDL::JntArray> qdot_out;
+		KDL::JntArray temp_qdot_out;
 
 		//objectFrames to broadcast
 		std::string externalName;

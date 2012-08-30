@@ -59,11 +59,13 @@ itasc_robot_pr2_test::itasc_robot_pr2_test(const std::string& name)
 		"name, position, velocity and effort of all the joints of the robot");
 	this->ports()->addPort("objectFramesPort", objectFrames_port);
 	this->ports()->addPort("kdl_from_ros", T_b_e_port);
+
+	this->ports()->addEventPort("qdot_in", desired_pos_in, boost::bind(&itasc_robot_pr2_test::convertJointPositions, this) );
+
+	//output
 	this->ports()->addPort("pose_to_test", pose_check_to_test);
 	this->ports()->addPort("jnt_to_test", jnt_value_check_to_test);
-
-
-
+	this->ports()->addPort("qdot_out", qdot_out);
 	this->properties()->addProperty("epsilon", epsilon);
 	this->properties()->addProperty("base_frame",base_frame).doc(
 		"the name of the base frame of the pr2");
@@ -173,6 +175,21 @@ bool itasc_robot_pr2_test::checkJointValues() {
 	//send event
 	jnt_value_check_to_test.write("e_joint value check completed, all joint values were equal");
 	return true;
+}
+
+void itasc_robot_pr2_test::convertJointPositions() {
+	//read from port
+	desired_pos_in.read(temp_desired_pos);
+	
+	//omzetten van temp_desired_pos (motion_control_msgs::jointpositions) to temp_qdot_out (KDL::JntArray)
+	temp_qdot_out.resize(temp_desired_pos.positions.size());
+	KDL::SetToZero(temp_qdot_out);
+	for(unsigned int j = 0; j < temp_desired_pos.positions.size(); j++){
+		temp_qdot_out(j) = temp_desired_pos.positions[j];
+	}
+
+	//write solution
+	qdot_out.write(temp_qdot_out);
 }
 
 }
