@@ -60,24 +60,27 @@ return rfsm.composite_state{
 
 NONemergency = rfsm.composite_state{
 	PreOperational = rfsm.simple_state{
+		entry=function()
+			raise_common_event("e_configTest")
+		end
 	},
 
 	ConfiguringTest = rfsm.simple_state{
 		entry=function()
-			objectframes_out_port:write(objectFrames_from_file)
+			objectframes_out_port:write(objectFrames_from_file:get())
 			configurePr2Robot()
 			configurePr2Connect()
+			connect_ports()
 			configureTrajectoryGenerator()
-			configureTrajectoryController()
 			configureTestComponent()		
-			raise_trigger_event("e_configTest")
+			raise_common_event("e_TestConfigured")
 		end,
 	},
 
 	ConfiguredTest = rfsm.simple_state{
 		entry=function()
 			--print("=>iTaSCFSM->ConfiguredITASC state entry")
-			raise_common_event("e_TestConfigured")
+			raise_common_event("e_startUpTest")
 		end,
 	},
 
@@ -86,17 +89,16 @@ NONemergency = rfsm.composite_state{
 			--print("=>iTaSCFSM->StartingITASC state entry")
 			startPr2Robot()
 			startPr2Connect()
-			startTrajectoryGenerator()
-			startTrajectoryController()
+			--startTrajectoryGenerator() somewhere else!
 			startTestComponent()	
-			raise_trigger_event("e_startTest")
+			raise_common_event("e_startTest")
 		end,
 	},
 
 	StartedTest = rfsm.simple_state{
 		entry=function()
 			--print("=>iTaSCFSM->StartedITASC state entry")
-			raise_common_event("e_TestStarted")
+			raise_common_event("e_runTests")
 		end,
 	},
 
@@ -126,11 +128,7 @@ NONemergency = rfsm.composite_state{
 	   },
 
 	   rfsm.transition { src='initial', tgt='Initializing' },
-	   rfsm.transition { src='Initializing', tgt='Running',
-			     guard = function (tr)
-					return guardMultipleEvents(tr, taskTable, 'e_running', '_coordinationInitialized')
-				     end
-			  },
+	   rfsm.transition { src='Initializing', tgt='Running'},
 	},
 
 	StoppingTest = rfsm.simple_state{
@@ -149,30 +147,17 @@ NONemergency = rfsm.composite_state{
 	},
 
 	rfsm.transition { src='initial', tgt='PreOperational' },
-	rfsm.transition { src='PreOperational', tgt='ConfiguringTest', events={'e_configTest'}, effect=function () --print("=>iTaSCFSM->transition to Configuring ITASC state") 
-        end },
-	rfsm.transition { src='ConfiguringTest', tgt='ConfiguredTest',
-					guard = function (tr)
-						return guardMultipleEvents(tr, taskTable, 'e_', 'Configured')
-					end
-		 			},
+	rfsm.transition { src='PreOperational', tgt='ConfiguringTest', events={'e_configTest'}},
+	rfsm.transition { src='ConfiguringTest', tgt='ConfiguredTest',events={'e_TestConfigured'}},
 	rfsm.transition { src='ConfiguringTest', tgt='StoppingTest', events={'e_stopTest'} },
-	rfsm.transition { src='ConfiguredTest', tgt='StartingTest', events={'e_startTest'} },
+	rfsm.transition { src='ConfiguredTest', tgt='StartingTest', events={'e_startUpTest'} },
 	rfsm.transition { src='ConfiguredTest', tgt='StoppingTest', events={'e_stopTest'} },
-	rfsm.transition { src='StartingTest', tgt='StartedTest',
-					guard = function (tr)
-						return guardMultipleEvents(tr, taskTable, 'e_', 'Started')
-					end
-					},
+	rfsm.transition { src='StartingTest', tgt='StartedTest', events={'e_startTest'} },
 	rfsm.transition { src='StartingTest', tgt='StoppingTest', events={ 'e_stopTest' } },
-	rfsm.transition { src='StartedTest', tgt='RunningTest', events={'e_runTest'} },
+	rfsm.transition { src='StartedTest', tgt='RunningTest', events={'e_runTests'} },
 	rfsm.transition { src='StartedTest', tgt='StoppingTest', events={ 'e_stopTest' } },
 	rfsm.transition { src='RunningTest', tgt='StoppingTest', events={ 'e_stopTest' } },
-	rfsm.transition { src='StoppingTest', tgt='StoppedTest',
-					guard = function (tr)
-						return guardMultipleEvents(tr, taskTable, 'e_', 'Stopped')
-					end
-					},
+	rfsm.transition { src='StoppingTest', tgt='StoppedTest'	},
 },
 
 TestEmergency = rfsm.simple_state{

@@ -22,36 +22,252 @@
       <value>torso_lift_joint_qdot</value>
     </simple>
   </struct>
-  <struct name="poses_from_file" type="float64[]">
-     <description>vector with poses</description>
-	<simple name="Element0" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element1" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element2" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element3" type="double"><description>Sequence Element</description><value>0</value></simple>
-
-	<simple name="Element4" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element5" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element6" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element7" type="double"><description>Sequence Element</description><value>0</value></simple>
-
-	<simple name="Element8" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element9" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element10" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element11" type="double"><description>Sequence Element</description><value>0</value></simple>
-
-	<simple name="Element12" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element13" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element14" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element15" type="double"><description>Sequence Element</description><value>0</value></simple>
-
-	<simple name="Element16" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element17" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element18" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element19" type="double"><description>Sequence Element</description><value>0</value></simple>
-
-	<simple name="Element20" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element21" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element22" type="double"><description>Sequence Element</description><value>0</value></simple>
-	<simple name="Element23" type="double"><description>Sequence Element</description><value>0</value></simple>
+  <struct name="poses_from_file" type="/motion_control_msgs/JointPositions[]">
+     <description>test </description>
+     <struct name="Element0" type="/motion_control_msgs/JointPositions">
+        <description>Item</description>
+        <struct name="names" type="string[]">
+           <description>Part</description>
+           <simple name="Element0" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element1" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element2" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element3" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element4" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element5" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element6" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element7" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element8" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element9" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element10" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element11" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element12" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element13" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element14" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element15" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element16" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element17" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element18" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element19" type="string"><description>Sequence Element</description><value>bla</value></simple>
+        </struct>
+        <struct name="positions" type="float64[]">
+           <description>Part</description>
+           <simple name="Element0" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element1" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element2" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element3" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element4" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element5" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element6" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element7" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element8" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element9" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element10" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element11" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element12" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element13" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element14" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element15" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element16" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element17" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element18" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element19" type="double"><description>Sequence Element</description><value>0</value></simple>
+        </struct>
+     </struct>
+     <struct name="Element1" type="/motion_control_msgs/JointPositions">
+        <description>Item</description>
+        <struct name="names" type="string[]">
+           <description>Part</description>
+           <simple name="Element0" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element1" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element2" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element3" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element4" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element5" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element6" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element7" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element8" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element9" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element10" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element11" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element12" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element13" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element14" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element15" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element16" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element17" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element18" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element19" type="string"><description>Sequence Element</description><value>bla</value></simple>
+        </struct>
+        <struct name="positions" type="float64[]">
+           <description>Part</description>
+           <simple name="Element0" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element1" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element2" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element3" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element4" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element5" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element6" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element7" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element8" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element9" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element10" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element11" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element12" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element13" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element14" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element15" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element16" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element17" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element18" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element19" type="double"><description>Sequence Element</description><value>0</value></simple>
+        </struct>
+     </struct>
+     <struct name="Element2" type="/motion_control_msgs/JointPositions">
+        <description>Item</description>
+        <struct name="names" type="string[]">
+           <description>Part</description>
+           <simple name="Element0" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element1" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element2" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element3" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element4" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element5" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element6" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element7" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element8" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element9" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element10" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element11" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element12" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element13" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element14" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element15" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element16" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element17" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element18" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element19" type="string"><description>Sequence Element</description><value>bla</value></simple>
+        </struct>
+        <struct name="positions" type="float64[]">
+           <description>Part</description>
+           <simple name="Element0" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element1" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element2" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element3" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element4" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element5" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element6" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element7" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element8" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element9" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element10" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element11" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element12" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element13" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element14" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element15" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element16" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element17" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element18" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element19" type="double"><description>Sequence Element</description><value>0</value></simple>
+        </struct>
+     </struct>
+     <struct name="Element3" type="/motion_control_msgs/JointPositions">
+        <description>Item</description>
+        <struct name="names" type="string[]">
+           <description>Part</description>
+           <simple name="Element0" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element1" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element2" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element3" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element4" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element5" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element6" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element7" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element8" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element9" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element10" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element11" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element12" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element13" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element14" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element15" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element16" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element17" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element18" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element19" type="string"><description>Sequence Element</description><value>bla</value></simple>
+        </struct>
+        <struct name="positions" type="float64[]">
+           <description>Part</description>
+           <simple name="Element0" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element1" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element2" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element3" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element4" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element5" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element6" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element7" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element8" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element9" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element10" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element11" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element12" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element13" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element14" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element15" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element16" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element17" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element18" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element19" type="double"><description>Sequence Element</description><value>0</value></simple>
+        </struct>
+     </struct>
+     <struct name="Element4" type="/motion_control_msgs/JointPositions">
+        <description>Item</description>
+        <struct name="names" type="string[]">
+           <description>Part</description>
+           <simple name="Element0" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element1" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element2" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element3" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element4" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element5" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element6" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element7" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element8" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element9" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element10" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element11" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element12" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element13" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element14" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element15" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element16" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element17" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element18" type="string"><description>Sequence Element</description><value>bla</value></simple>
+           <simple name="Element19" type="string"><description>Sequence Element</description><value>bla</value></simple>
+        </struct>
+        <struct name="positions" type="float64[]">
+           <description>Part</description>
+           <simple name="Element0" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element1" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element2" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element3" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element4" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element5" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element6" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element7" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element8" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element9" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element10" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element11" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element12" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element13" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element14" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element15" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element16" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element17" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element18" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element19" type="double"><description>Sequence Element</description><value>0</value></simple>
+        </struct>
+     </struct>
   </struct>
 </properties>

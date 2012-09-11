@@ -45,10 +45,7 @@ require "kdlpp"    --kdl pritty print (should be included in lua path!)
 -- tc=Task Context of the compent we are in ( in this case itasc_robot_pr2_test)
 tc=rtt.getTC()
 local common_events_in, priority_events_in
-local objectFrames_from_file 
 local i
-a = rtt.Variable("motion_control_msgs.JointPositions")
-a:fromtab({names = {"a", "b", "c"}, positions = {1, 2, 3}})
 
 function configureHook()
 	-- Peer table (to enable smaller code to request operations)
@@ -61,18 +58,12 @@ function configureHook()
 	-- create a vector (table) of objectframe_names. ONLY INSERT STRINGS
 	objectFrames_from_file=rtt.Property("strings", "OF_from_file", "vector with objectframe names")
 	tc:addProperty(objectFrames_from_file)
-	
-	-- creates a temporary jointposition array for sending to nAxesGenerator
-	temp_jps=rtt.Property("motion_control_msgs.JointPositions", "temp_jps")
-	tc:addProperty(temp_jps)
-
-	temp_jps:set(a)
 
 	--array indexing for moveToNextPosition
 	i = 0
 
 	-- create a vector (table) of poses. ONLY INSERT KDL.FRAMES
-	poses_from_file=rtt.Property("float64[]", "poses_from_file", "vector with poses")
+	poses_from_file=rtt.Property("motion_control_msgs.JointPositions[]", "poses_from_file", "vector with poses")
 	tc:addProperty(poses_from_file)
 
 	-- FSM
@@ -145,8 +136,10 @@ function configureHook()
 	return true
 end
 
+
 function updateHook()
 	rfsm.run(fsm)
+	return true
 end
 
 function cleanupHook()
@@ -170,9 +163,9 @@ end
 
 --- Function containing RTT specific info to configure pr2connect
 function configurePr2Connect()
-	if TestSupPeertable.Pr2Connect:configure() 
+	if TestSupPeertable.pr2connector:configure() 
         then --print("   cartesian_generator configured") 
-        else print("    [test_supervisor]:function configurePr2Connect(): couldn't configure Pr2Connect")
+        else print("    [test_supervisor]:function configurePr2Connect(): couldn't configure pr2connector")
 	     raise_common_event("e_emergency") end
 end
 
@@ -193,13 +186,6 @@ function configureTrajectoryGenerator()
 	     raise_common_event("e_emergency") end
 end
 
---- Function containing RTT specific info to configure pr2Robot
-function configureTrajectoryController()
-	if TestSupPeertable.nAxes_controller:configure() 
-        then --print("   pr2Robot configured") 
-        else print("    [test_supervisor]:function configureTrajectoryController(): couldn't configure nAxes_controller")
-	     raise_common_event("e_emergency") end
-end
 
 --START
 --- Function containing RTT specific info to start Pr2Robot
@@ -213,7 +199,7 @@ end
 
 --- Function containing RTT specific info to start Pr2Connect
 function startPr2Connect()
-	if TestSupPeertable.Pr2Connect:start() 
+	if TestSupPeertable.pr2connector:start() 
         then --print("   cartesian_generator started") 
         else print("    [test_supervisor]:function startPr2Connect(): couldn't start Pr2Connect")
 	     raise_common_event("e_emergency") 
@@ -236,13 +222,6 @@ function startTrajectoryGenerator()
 	end
 end
 
-function startTrajectoryController()
-	if TestSupPeertable.nAxes_controller:start() 
-        then --print("   cartesian_generator started") 
-        else print("    [test_supervisor]:function startTrajectoryController(): couldn't start nAxes_controller")
-	     raise_common_event("e_emergency") 
-	end
-end
 
 --STOP
 --- Function containing RTT specific info to stop Pr2Robot
@@ -256,7 +235,7 @@ end
 
 --- Function containing RTT specific info to stop Pr2Connect
 function stopTrajectoryGenerator()
-	if TestSupPeertable.Pr2Connect:stop() 
+	if TestSupPeertable.pr2connector:stop() 
         then --print("   cartesian_generator stopped") 
         else print("    [test_supervisor]:function stopPr2Connect(): couldn't stop Pr2Connect")
 	     raise_common_event("e_emergency") 
@@ -281,22 +260,17 @@ function stopTrajectoryGenerator()
 	end
 end
 
-function stopTrajectoryController()
-	if TestSupPeertable.nAxes_controller:stop() 
-        then --print("   cartesian_generator stopped") 
-        else print("    [test_supervisor]:function stopTrajectoryController(): couldn't stop nAxes_controller")
-	     raise_common_event("e_emergency") 
-	end
-end
+
 
 
 --- Function containing RTT specific info to move pr2robot to some pose.
 function moveToNextPosition()
 	temp = poses_from_file:get()
-	temp_of = objectframes_from_file:get()
-	if(i > (temp:size()))
+	if(i > temp.size )
 	then --do nothing, all moves are done
-	else
+	else 
+	     joint_positions_out:write(temp[i])
+	     i = i + 1
 	end
 end
 
@@ -316,6 +290,129 @@ function doJointValueChecks()
 	else print ("    pose checks did not match!")
 	     raise_common_event("e_checkError")
 	end
+end
+
+function updateRobot()
+	if TestSupPeertable.TestComponent:updateRobotState()
+	then --do nothing 
+	else print ("    pose checks did not match!")
+	     raise_common_event("e_checkError")
+	end
+end
+
+function sendToRobot()
+	if TestSupPeertable.TestComponent:checkJointValues()
+	then --do nothing 
+	else print ("    pose checks did not match!")
+	     raise_common_event("e_checkError")
+	end
+end
+
+-- connect the robot's ports
+function connect_ports()
+	--runScript=tc:provides("scripting"):getOperation("runScript")
+	--runScript("../../../iTaSC_pr2/scripts/connectToControllers.ops")
+	-- doesn't work, "No method "stream" registered for the object or task 'ApplicationSuperVisor'"
+--print(tc:provides())
+--loadPrograms=tc:provides("scripting"):getOperation("loadPrograms")
+--loadPrograms("../../../iTaSC_pr2/scripts/connectToControllers.ops")
+
+	-- lua:
+	-- all assuming the iTaSC::pr2connect component is named 'pr2connector'
+	local string pr2connector = "pr2connector"
+	depl = tc:getPeer("Deployer")
+	-- ROS connection policy
+	roscp=rtt.Variable("ConnPolicy")
+	roscp.transport = 3
+	
+	-- INPUT
+	-- connect the jointstate topic to the pr2connector
+	roscp.name_id = "/joint_states"
+	depl:stream(pr2connector .. ".joint_state_from_robot", roscp)
+	
+
+	-- OUTPUT
+	roscp.name_id = "/l_shoulder_pan_velocity_controller/command"
+	depl:stream(pr2connector .. ".l_shoulder_pan_joint_qdot", roscp)
+	roscp.name_id = "/l_shoulder_lift_velocity_controller/command"
+	depl:stream(pr2connector .. ".l_shoulder_lift_joint_qdot", roscp)
+	roscp.name_id = "/l_upper_arm_roll_velocity_controller/command"
+	depl:stream(pr2connector .. ".l_upper_arm_roll_joint_qdot", roscp)
+	roscp.name_id = "/l_elbow_flex_velocity_controller/command"
+	depl:stream(pr2connector .. ".l_elbow_flex_joint_qdot", roscp)
+	roscp.name_id = "/l_forearm_roll_velocity_controller/command"
+	depl:stream(pr2connector .. ".l_forearm_roll_joint_qdot", roscp)
+	roscp.name_id = "/l_wrist_flex_velocity_controller/command"
+	depl:stream(pr2connector .. ".l_wrist_flex_joint_qdot", roscp)
+	roscp.name_id = "/l_wrist_roll_velocity_controller/command"
+	depl:stream(pr2connector .. ".l_wrist_roll_joint_qdot", roscp)
+
+	roscp.name_id = "/r_shoulder_pan_velocity_controller/command"
+	depl:stream(pr2connector .. ".r_shoulder_pan_joint_qdot", roscp)
+	roscp.name_id = "/r_shoulder_lift_velocity_controller/command"
+	depl:stream(pr2connector .. ".r_shoulder_lift_joint_qdot", roscp)
+	roscp.name_id = "/r_upper_arm_roll_velocity_controller/command"
+	depl:stream(pr2connector .. ".r_upper_arm_roll_joint_qdot", roscp)
+	roscp.name_id = "/r_elbow_flex_velocity_controller/command"
+	depl:stream(pr2connector .. ".r_elbow_flex_joint_qdot", roscp)
+	roscp.name_id = "/r_forearm_roll_velocity_controller/command"
+	depl:stream(pr2connector .. ".r_forearm_roll_joint_qdot", roscp)
+	roscp.name_id = "/r_wrist_flex_velocity_controller/command"
+	depl:stream(pr2connector .. ".r_wrist_flex_joint_qdot", roscp)
+	roscp.name_id = "/r_wrist_roll_velocity_controller/command"
+	depl:stream(pr2connector .. ".r_wrist_roll_joint_qdot", roscp)
+
+	roscp.name_id = "/base_controller/command"
+	depl:stream(pr2connector .. ".base_combinedtwist", roscp)
+	roscp.name_id = "/torso_lift_velocity_controller/command"
+	depl:stream(pr2connector .. ".torso_lift_joint_qdot", roscp)
+
+    roscp.name_id = "/head_pan_velocity_controller/command"
+    depl:stream(pr2connector .. ".head_pan_joint_qdot", roscp)
+    roscp.name_id = "/head_tilt_velocity_controller/command"
+    depl:stream(pr2connector .. ".head_tilt_joint_qdot", roscp)
+
+	-- delta qdot inputs
+	roscp.name_id = "/l_shoulder_pan_velocity_controller/state"
+	depl:stream(pr2connector .. ".l_shoulder_pan_joint_e", roscp)
+	roscp.name_id = "/l_shoulder_lift_velocity_controller/state"
+	depl:stream(pr2connector .. ".l_shoulder_lift_joint_e", roscp)
+	roscp.name_id = "/l_upper_arm_roll_velocity_controller/state"
+	depl:stream(pr2connector .. ".l_upper_arm_roll_joint_e", roscp)
+	roscp.name_id = "/l_elbow_flex_velocity_controller/state"
+	depl:stream(pr2connector .. ".l_elbow_flex_joint_e", roscp)
+	roscp.name_id = "/l_forearm_roll_velocity_controller/state"
+	depl:stream(pr2connector .. ".l_forearm_roll_joint_e", roscp)
+	roscp.name_id = "/l_wrist_flex_velocity_controller/state"
+	depl:stream(pr2connector .. ".l_wrist_flex_joint_e", roscp)
+	roscp.name_id = "/l_wrist_roll_velocity_controller/state"
+	depl:stream(pr2connector .. ".l_wrist_roll_joint_e", roscp)
+
+	roscp.name_id = "/r_shoulder_pan_velocity_controller/state"
+	depl:stream(pr2connector .. ".r_shoulder_pan_joint_e", roscp)
+	roscp.name_id = "/r_shoulder_lift_velocity_controller/state"
+	depl:stream(pr2connector .. ".r_shoulder_lift_joint_e", roscp)
+	roscp.name_id = "/r_upper_arm_roll_velocity_controller/state"
+	depl:stream(pr2connector .. ".r_upper_arm_roll_joint_e", roscp)
+	roscp.name_id = "/r_elbow_flex_velocity_controller/state"
+	depl:stream(pr2connector .. ".r_elbow_flex_joint_e", roscp)
+	roscp.name_id = "/r_forearm_roll_velocity_controller/state"
+	depl:stream(pr2connector .. ".r_forearm_roll_joint_e", roscp)
+	roscp.name_id = "/r_wrist_flex_velocity_controller/state"
+	depl:stream(pr2connector .. ".r_wrist_flex_joint_e", roscp)
+	roscp.name_id = "/r_wrist_roll_velocity_controller/state"
+	depl:stream(pr2connector .. ".r_wrist_roll_joint_e", roscp)
+
+	roscp.name_id = "/base_controller/state"
+	depl:stream(pr2connector .. ".base_combinedtwist", roscp)
+	roscp.name_id = "/torso_lift_velocity_controller/state"
+	depl:stream(pr2connector .. ".torso_lift_joint_e", roscp)
+
+    roscp.name_id = "/head_pan_velocity_controller/state"
+    depl:stream(pr2connector .. ".head_pan_joint_e", roscp)
+    roscp.name_id = "/head_tilt_velocity_controller/state"
+    depl:stream(pr2connector .. ".head_tilt_joint_e", roscp)
+	
 end
 
 

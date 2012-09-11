@@ -66,6 +66,7 @@ itasc_robot_pr2_test::itasc_robot_pr2_test(const std::string& name)
 	this->ports()->addPort("pose_to_test", pose_check_to_test);
 	this->ports()->addPort("jnt_to_test", jnt_value_check_to_test);
 	this->ports()->addPort("qdot_out", qdot_out);
+	this->ports()->addPort("msr_pos_out", msr_pos_out);
 	this->properties()->addProperty("epsilon", epsilon);
 	this->properties()->addProperty("base_frame",base_frame).doc(
 		"the name of the base frame of the pr2");
@@ -88,6 +89,8 @@ bool itasc_robot_pr2_test::configureHook(){
 
 	ros_kdl_frame = KDL::Frame::Identity();
 	epsilon = (10^-12);
+	temp_qdot_out.resize(20);
+	temp_desired_pos.positions.resize(20);
 	return true;
 }
 
@@ -182,14 +185,23 @@ void itasc_robot_pr2_test::convertJointPositions() {
 	desired_pos_in.read(temp_desired_pos);
 	
 	//omzetten van temp_desired_pos (motion_control_msgs::jointpositions) to temp_qdot_out (KDL::JntArray)
-	temp_qdot_out.resize(temp_desired_pos.positions.size());
-	KDL::SetToZero(temp_qdot_out);
 	for(unsigned int j = 0; j < temp_desired_pos.positions.size(); j++){
 		temp_qdot_out(j) = temp_desired_pos.positions[j];
 	}
 
 	//write solution
 	qdot_out.write(temp_qdot_out);
+}
+
+void itasc_robot_pr2_test::passPositionToGen(){
+	q_port_in.read(temp_qdot_in); //read in values
+
+	//omzetten van temp_desired_pos (motion_control_msgs::jointpositions) to temp_qdot_out (KDL::JntArray)
+	for(unsigned int j = 0; j < temp_qdot_in.rows(); j++){
+		 tempjointstate.position[j] = temp_qdot_in(j);
+	}
+
+	msr_pos_out.write(tempjointstate);
 }
 
 }
