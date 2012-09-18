@@ -51,15 +51,13 @@ itasc_robot_pr2_test::itasc_robot_pr2_test(const std::string& name)
 	:TaskContext(name) {
 	//ports
 	//input
-	this->ports()->addPort("q_port_in", q_port_in).doc(
-			"read in joints from itasc_pr2");
+	this->ports()->addEventPort("q_port_in", q_port_in, boost::bind(&itasc_robot_pr2_test::passPositionToGen, this) );
 	this->ports()->addPort("q_names_in", q_names_in).doc(	
 			"read in names of joints from itasc_pr2");
 	this->ports()->addPort("joint_state_from_robot", joint_state_port).doc(
 		"name, position, velocity and effort of all the joints of the robot");
 	this->ports()->addPort("objectFramesPort", objectFrames_port);
 	this->ports()->addPort("kdl_from_ros", T_b_e_port);
-
 	this->ports()->addEventPort("qdot_in", desired_pos_in, boost::bind(&itasc_robot_pr2_test::convertJointPositions, this) );
 
 	//output
@@ -194,13 +192,19 @@ void itasc_robot_pr2_test::convertJointPositions() {
 }
 
 void itasc_robot_pr2_test::passPositionToGen(){
-	q_port_in.read(temp_qdot_in); //read in values
+	if(q_port_in.read(temp_qdot_in) == NoData){ //read in values
+		log(Error) << "can't pass information to generator, no data on q_port_in" << endlog();
+	}
+	log(Warning) << "rows " << temp_qdot_in.rows() << endlog();
 
+	tempjointstate.position.resize(temp_qdot_in.rows());
 	//omzetten van temp_desired_pos (motion_control_msgs::jointpositions) to temp_qdot_out (KDL::JntArray)
 	for(unsigned int j = 0; j < temp_qdot_in.rows(); j++){
+		log(Warning) << "testcomp 2 - " << j << endlog();
 		 tempjointstate.position[j] = temp_qdot_in(j);
 	}
 
+	log(Warning) << "testcomp 3" << endlog();
 	msr_pos_out.write(tempjointstate);
 }
 

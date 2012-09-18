@@ -176,6 +176,9 @@ Timer.configure()
 # start timers 
 Timer.start()
 
+rtt_tf.configure()
+rtt_tf.start()
+
 # start the task supervisors
 test_supervisor.start
 

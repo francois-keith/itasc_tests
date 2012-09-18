@@ -35,6 +35,8 @@
 -- POSSIBILITY OF SUCH DAMAGE.
 
 -- statemachine
+require "rfsm_timeevent"
+rfsm_timeevent.set_gettime_hook(rtt.getTime)
 --require("ansicolors")
 local state, trans, conn = rfsm.state, rfsm.trans, rfsm.conn
 
@@ -65,14 +67,37 @@ NONemergency = rfsm.composite_state{
 		end
 	},
 
-	ConfiguringTest = rfsm.simple_state{
+	ConfiguringFirstPartTest = rfsm.simple_state{
 		entry=function()
 			objectframes_out_port:write(objectFrames_from_file:get())
 			configurePr2Robot()
-			configurePr2Connect()
+			raise_common_event("e_FirstPartConfigured")
+		end,
+	},
+	
+	ConfiguringPr2Connect = rfsm.simple_state{
+			doo = function()
+				while true do
+					if(configurePr2Connect())
+					then raise_common_event("e_Pr2Configured")
+					     rfsm.yield()
+					else rfsm.yield()
+					end
+				end
+			end,
+	},
+	
+	errorOnConfigure = rfsm.simple_state{
+		entry = function()
+			raise_common_event('e_emergency')		
+		end
+	},
+	
+	ConfiguringSecondPart = rfsm.simple_state{
+		entry = function()
 			connect_ports()
 			configureTrajectoryGenerator()
-			configureTestComponent()		
+			configureTestComponent()	
 			raise_common_event("e_TestConfigured")
 		end,
 	},
@@ -86,7 +111,7 @@ NONemergency = rfsm.composite_state{
 
 	StartingTest = rfsm.simple_state{
 		entry=function(fsm)
-			--print("=>iTaSCFSM->StartingITASC state entry")
+			--print("=>iTaSCFSM->StartingITASC state entry")	
 			startPr2Robot()
 			startPr2Connect()
 			--startTrajectoryGenerator() somewhere else!
@@ -145,11 +170,14 @@ NONemergency = rfsm.composite_state{
 			raise_common_event("e_TestStopped")
 		end,
 	},
-
+	
 	rfsm.transition { src='initial', tgt='PreOperational' },
-	rfsm.transition { src='PreOperational', tgt='ConfiguringTest', events={'e_configTest'}},
-	rfsm.transition { src='ConfiguringTest', tgt='ConfiguredTest',events={'e_TestConfigured'}},
-	rfsm.transition { src='ConfiguringTest', tgt='StoppingTest', events={'e_stopTest'} },
+	rfsm.transition { src='PreOperational', tgt='ConfiguringFirstPartTest', events={'e_configTest'}},
+	rfsm.transition { src='ConfiguringFirstPartTest', tgt='ConfiguringPr2Connect', events={'e_FirstPartConfigured'}},
+	rfsm.transition { src='ConfiguringPr2Connect', tgt='ConfiguringSecondPart',events={'e_Pr2Configured'}},
+	rfsm.transition { src='ConfiguringPr2Connect', tgt='errorOnConfigure', events={ "e_after(5)" }},
+	rfsm.transition { src='ConfiguringSecondPart', tgt='ConfiguredTest',events={'e_TestConfigured'}},
+	rfsm.transition { src='ConfiguringSecondPart', tgt='StoppingTest', events={'e_stopTest'} },
 	rfsm.transition { src='ConfiguredTest', tgt='StartingTest', events={'e_startUpTest'} },
 	rfsm.transition { src='ConfiguredTest', tgt='StoppingTest', events={'e_stopTest'} },
 	rfsm.transition { src='StartingTest', tgt='StartedTest', events={'e_startTest'} },

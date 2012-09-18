@@ -139,7 +139,6 @@ end
 
 function updateHook()
 	rfsm.run(fsm)
-	return true
 end
 
 function cleanupHook()
@@ -148,8 +147,6 @@ function cleanupHook()
 	-- cleanup created variables
 	common_events_in:delete()
 	priority_events_in:delete()
-	
-
 end
 
 -- CONFIGURE
@@ -161,12 +158,16 @@ function configurePr2Robot()
 	     raise_common_event("e_emergency") end
 end
 
+
+
+
 --- Function containing RTT specific info to configure pr2connect
 function configurePr2Connect()
 	if TestSupPeertable.pr2connector:configure() 
-        then --print("   cartesian_generator configured") 
+        then return true
         else print("    [test_supervisor]:function configurePr2Connect(): couldn't configure pr2connector")
-	     raise_common_event("e_emergency") end
+	     return false
+	end
 end
 
 
@@ -265,17 +266,20 @@ end
 
 --- Function containing RTT specific info to move pr2robot to some pose.
 function moveToNextPosition()
+	print("moveToNextPosition entered")
 	temp = poses_from_file:get()
 	if(i > temp.size )
 	then --do nothing, all moves are done
 	else 
-	     joint_positions_out:write(temp[i])
+	     print(i)
+	     --joint_positions_out:write(temp[i])
 	     i = i + 1
 	end
 end
 
 --- Function containing RTT specific info to move pr2robot to some pose.
 function doPoseChecks()
+	print("doPoseChecks entered")
 	if TestSupPeertable.TestComponent:checkPoses()
 	then --do nothing 
 	else print ("    pose checks did not match!")
@@ -293,19 +297,11 @@ function doJointValueChecks()
 end
 
 function updateRobot()
-	if TestSupPeertable.TestComponent:updateRobotState()
-	then --do nothing 
-	else print ("    pose checks did not match!")
-	     raise_common_event("e_checkError")
-	end
+	TestSupPeertable.Pr2Robot:updateRobotState()
 end
 
 function sendToRobot()
-	if TestSupPeertable.TestComponent:checkJointValues()
-	then --do nothing 
-	else print ("    pose checks did not match!")
-	     raise_common_event("e_checkError")
-	end
+	TestSupPeertable.Pr2Robot:sendToRobot()
 end
 
 -- connect the robot's ports
