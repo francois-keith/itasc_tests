@@ -48,16 +48,17 @@ ORO_CREATE_COMPONENT(iTaSC::itasc_robot_pr2_test);
 
 namespace iTaSC {
 itasc_robot_pr2_test::itasc_robot_pr2_test(const std::string& name)
-	:TaskContext(name) {
+	:TaskContext(name),
+	epsilon(10^-12),
+	base_frame("odom_combined") {
 	//ports
 	//input
-	this->ports()->addEventPort("q_port_in", q_port_in, boost::bind(&itasc_robot_pr2_test::passPositionToGen, this) );
+	this->ports()->addPort("q_port_in", q_port_in);
 	this->ports()->addPort("q_names_in", q_names_in).doc(	
 			"read in names of joints from itasc_pr2");
 	this->ports()->addPort("joint_state_from_robot", joint_state_port).doc(
 		"name, position, velocity and effort of all the joints of the robot");
 	this->ports()->addPort("objectFramesPort", objectFrames_port);
-	this->ports()->addPort("kdl_from_ros", T_b_e_port);
 	this->ports()->addEventPort("qdot_in", desired_pos_in, boost::bind(&itasc_robot_pr2_test::convertJointPositions, this) );
 
 	//output
@@ -68,6 +69,10 @@ itasc_robot_pr2_test::itasc_robot_pr2_test(const std::string& name)
 	this->properties()->addProperty("epsilon", epsilon);
 	this->properties()->addProperty("base_frame",base_frame).doc(
 		"the name of the base frame of the pr2");
+
+	this->addOperation("passPositionToGen", &itasc_robot_pr2_test::passPositionToGen, this, ClientThread);
+	this->addOperation("checkPoses", &itasc_robot_pr2_test::checkPoses, this, ClientThread);
+	this->addOperation("checkJointValues", &itasc_robot_pr2_test::checkJointValues, this, ClientThread);
 
 }
 
@@ -86,31 +91,38 @@ bool itasc_robot_pr2_test::configureHook(){
 	lookupTransform = this->getPeer("rtt_tf")->provides()->getOperation("lookupTransform");
 
 	ros_kdl_frame = KDL::Frame::Identity();
-	epsilon = (10^-12);
 	temp_qdot_out.resize(20);
-	temp_desired_pos.positions.resize(20);
-	return true;
-}
+	temp_desired_pos.velocities.resize(20);
 
-bool itasc_robot_pr2_test::checkPoses() {
 	//read vector with object_frame names
 	if(NoData==objectFrames_port.read(objectFramesToBC)){
 		log(Error) << "No data on the objectFramesPort!" << endlog();
 		return false;
 	}
 
+	T_b_e_ports.reserve(objectFramesToBC.size());
+	
 	// for all objectframes
 	for(unsigned int j = 0; j < objectFramesToBC.size(); j++){
-		//get KDL::frame from itasc_pr2
-		//clear earlier connections
-		T_b_e_port.disconnect();
 		//compose name of port at robot
 		externalName = "Pose_" + objectFramesToBC[j] + "_base";
+		T_b_e_ports.push_back(new InputPort<KDL::Frame>());
+		this->ports()->addPort(objectFramesToBC[j] + "_port", * T_b_e_ports[j]);
 		//connect local port to external port
-		T_b_e_port.connectTo(this->getPeer("pr2Robot")->ports()->getPort(externalName));
-		//read in Frame from itasc_pr2 
-		T_b_e_port.read(itasc_kdl_frame);
+		T_b_e_ports[j]->connectTo(this->getPeer("Pr2Robot")->ports()->getPort(externalName));
+	}
 
+	
+	return true;
+}
+
+bool itasc_robot_pr2_test::checkPoses() {
+	
+
+	// for all objectframes
+	for(unsigned int j = 0; j < objectFramesToBC.size(); j++){
+		//read in Frame from itasc_pr2 
+		T_b_e_ports[j]->read(itasc_kdl_frame);
 		//get KDL::Frame from ros topic
 		try
 		{
@@ -118,24 +130,24 @@ bool itasc_robot_pr2_test::checkPoses() {
 			stfm = lookupTransform(base_frame,objectFramesToBC[j]);
 		}catch (tf::TransformException ex)
 		{
-#ifndef NDEBUG
-			log(Debug) << "catched an error in rtt_tf::lookupTransform: " << ex.what() << endlog();
-#endif
+			log(Error) << "failed at number: " << j << " catched an error in rtt_tf::lookupTransform: between: "  << endlog();
+			log(Error) << "base_frame: " << base_frame << "objectframe: " << objectFramesToBC[j] << "\n" << ex.what() << endlog(); 
 		}
 		ros_kdl_frame.p = KDL::Vector(stfm.transform.translation.x,stfm.transform.translation.y,stfm.transform.translation.z);
 		ros_kdl_frame.M = KDL::Rotation::Quaternion(stfm.transform.rotation.x,stfm.transform.rotation.y,stfm.transform.rotation.z,stfm.transform.rotation.w);
 		
 		if(!KDL::Equal(itasc_kdl_frame, ros_kdl_frame, epsilon)) {
-				//send event;
-				pose_check_to_test.write("e_check of poses failed, frames weren't equal for objectframe :" + objectFramesToBC[j]);
+				log(Warning) << "itasc frame \n" << itasc_kdl_frame << "ros frame \n" << ros_kdl_frame << endlog();
+				log(Warning) << "e_check of poses failed, frames weren't equal for objectframe :" << objectFramesToBC[j] << endlog();
 				return false;
 
 		}
 
 	}
-	
+	log(Warning) << "checkPoses: before write" << endlog();
 	//send event
 	pose_check_to_test.write("e_check of poses completed, all KDL::Frames were equal");
+	log(Warning) << "checkPoses: end" << endlog();
 	return true;
 }
 
@@ -181,10 +193,9 @@ bool itasc_robot_pr2_test::checkJointValues() {
 void itasc_robot_pr2_test::convertJointPositions() {
 	//read from port
 	desired_pos_in.read(temp_desired_pos);
-	
 	//omzetten van temp_desired_pos (motion_control_msgs::jointpositions) to temp_qdot_out (KDL::JntArray)
-	for(unsigned int j = 0; j < temp_desired_pos.positions.size(); j++){
-		temp_qdot_out(j) = temp_desired_pos.positions[j];
+	for(unsigned int j = 0; j < temp_desired_pos.velocities.size(); j++){
+		temp_qdot_out(j) = temp_desired_pos.velocities[j];
 	}
 
 	//write solution
@@ -195,16 +206,13 @@ void itasc_robot_pr2_test::passPositionToGen(){
 	if(q_port_in.read(temp_qdot_in) == NoData){ //read in values
 		log(Error) << "can't pass information to generator, no data on q_port_in" << endlog();
 	}
-	log(Warning) << "rows " << temp_qdot_in.rows() << endlog();
 
 	tempjointstate.position.resize(temp_qdot_in.rows());
 	//omzetten van temp_desired_pos (motion_control_msgs::jointpositions) to temp_qdot_out (KDL::JntArray)
 	for(unsigned int j = 0; j < temp_qdot_in.rows(); j++){
-		log(Warning) << "testcomp 2 - " << j << endlog();
 		 tempjointstate.position[j] = temp_qdot_in(j);
 	}
 
-	log(Warning) << "testcomp 3" << endlog();
 	msr_pos_out.write(tempjointstate);
 }
 

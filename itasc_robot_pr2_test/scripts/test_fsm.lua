@@ -97,6 +97,7 @@ NONemergency = rfsm.composite_state{
 		entry = function()
 			connect_ports()
 			configureTrajectoryGenerator()
+			configureObjectframes()
 			configureTestComponent()	
 			raise_common_event("e_TestConfigured")
 		end,

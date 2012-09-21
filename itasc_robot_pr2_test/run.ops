@@ -119,7 +119,7 @@ Pr2Robot.marshalling.updateProperties(rospack.find("itasc_pr2") + "/cpf/pr2robot
 loadService("pr2connector","marshalling")
 pr2connector.marshalling.updateProperties(rospack.find("itasc_pr2") + "/cpf/pr2connect.cpf")
 loadService("nAxes_generator","marshalling")
-nAxes_generator.marshalling.updateProperties(rospack.find("naxes_motion_control") + "/cpf/nAxesGeneratorPos.cpf")
+nAxes_generator.marshalling.updateProperties(rospack.find("itasc_robot_pr2_test") + "/cpf/nAxesGenerator.cpf")
 
 #test_supervisor.configure
 
@@ -146,6 +146,7 @@ connect("Pr2Robot.q_from_robot", "pr2connector.q_msr_std", cp)
 connect("Pr2Robot.qdot_to_robot", "pr2connector.qdot_in", cp)
 connect("Pr2Robot.joint_names", "pr2connector.joint_names", cp)
 connect("Pr2Robot.deltaqdot_in", "pr2connector.deltaqdot", cp)
+connect("Pr2Robot.base_frame", "pr2connector.base_frame", cp)
 
 #connect port to signal finished nAxesGenerator
 connect("nAxes_generator.moveFinished", "test_supervisor.test_common_events_in", cp)
@@ -155,13 +156,15 @@ connect("test_supervisor.objectframes_out", "TestComponent.objectFramesPort", cp
 connect("TestComponent.q_names_in", "Pr2Robot.joint_names", cp)
 connect("TestComponent.q_port_in", "Pr2Robot.q_port", cp)
 
+connect("test_supervisor.objectframes_out", "Pr2Robot.objectFramesPort", cp)
+
 #connect port for getting measured joint positions to generator
 connect("nAxes_generator.nAxesSensorPosition", "TestComponent.msr_pos_out", cp)
 
 #connect ports for steering robot
 connect("test_supervisor.joint_positions_out", "nAxes_generator.nAxesJointPosition", cp)
-connect("nAxes_generator.nAxesDesiredPosition", "TestComponent.qdot_in", cp)
-connect("TestComponent.qdot_out","pr2connector.qdot_in", cp)
+connect("nAxes_generator.nAxesDesiredVelocity", "TestComponent.qdot_in", cp)
+connect("TestComponent.qdot_out","Pr2Robot.qdot", cp)
 
 var ConnPolicy roscp
 roscp.transport = 3

@@ -7,19 +7,19 @@
     <description>vector with objectframe names</description>
     <simple name="Element0" type="string">
       <description>Sequence Element</description>
-      <value>l_elbow_flex_joint_qdot</value>
+      <value>l_gripper_tool_frame</value>
     </simple>
     <simple name="Element1" type="string">
       <description>Sequence Element</description>
-      <value>r_elbow_flex_joint_qdot</value>
+      <value>torso_lift_link</value>
     </simple>
     <simple name="Element2" type="string">
       <description>Sequence Element</description>
-      <value>head_tilt_joint_qdot</value>
+      <value>r_gripper_tool_frame</value>
     </simple>
     <simple name="Element3" type="string">
       <description>Sequence Element</description>
-      <value>torso_lift_joint_qdot</value>
+      <value>head_plate_frame</value>
     </simple>
   </struct>
   <struct name="poses_from_file" type="/motion_control_msgs/JointPositions[]">
@@ -54,8 +54,8 @@
            <simple name="Element0" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element1" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element2" type="double"><description>Sequence Element</description><value>0</value></simple>
-           <simple name="Element3" type="double"><description>Sequence Element</description><value>0</value></simple>
-           <simple name="Element4" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element3" type="double"><description>Sequence Element</description><value>1</value></simple>
+           <simple name="Element4" type="double"><description>Sequence Element</description><value>2.8</value></simple>
            <simple name="Element5" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element6" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element7" type="double"><description>Sequence Element</description><value>0</value></simple>

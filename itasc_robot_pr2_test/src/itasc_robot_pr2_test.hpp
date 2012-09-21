@@ -76,16 +76,15 @@ using namespace Eigen;
 		virtual bool configureHook();
 		virtual void convertJointPositions();
 		virtual void passPositionToGen();
-	private:
+	protected:
 		RTT::InputPort<sensor_msgs::JointState> joint_state_port;
-		RTT::InputPort<KDL::Frame> T_b_e_port;
 		RTT::InputPort<std::vector<std::string> > q_names_in;
 		RTT::InputPort<KDL::JntArray> q_port_in;	
 		///input: vector of the names of object frames to broadcast
 		RTT::InputPort<std::vector<std::string> > objectFrames_port;
 		
-		RTT::InputPort<motion_control_msgs::JointPositions> desired_pos_in;
-		motion_control_msgs::JointPositions temp_desired_pos;
+		RTT::InputPort<motion_control_msgs::JointVelocities> desired_pos_in;
+		motion_control_msgs::JointVelocities temp_desired_pos;
 		sensor_msgs::JointState tempjointstate;
 		KDL::JntArray temp_qdot_in;
 		KDL::JntArray temp_qdot_out;
@@ -107,6 +106,8 @@ using namespace Eigen;
 		KDL::Frame ros_kdl_frame;
 		KDL::Frame itasc_kdl_frame;
 		double epsilon;
+
+		std::vector<InputPort<KDL::Frame>* > T_b_e_ports;
 	};
 }
 #endif

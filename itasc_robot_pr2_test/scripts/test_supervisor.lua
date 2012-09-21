@@ -165,7 +165,7 @@ end
 function configurePr2Connect()
 	if TestSupPeertable.pr2connector:configure() 
         then return true
-        else print("    [test_supervisor]:function configurePr2Connect(): couldn't configure pr2connector")
+        else --print("    [test_supervisor]:function configurePr2Connect(): couldn't configure pr2connector")
 	     return false
 	end
 end
@@ -266,20 +266,19 @@ end
 
 --- Function containing RTT specific info to move pr2robot to some pose.
 function moveToNextPosition()
-	print("moveToNextPosition entered")
+	print("move to next entered")
 	temp = poses_from_file:get()
+	print("temp read in")
 	if(i > temp.size )
 	then --do nothing, all moves are done
-	else 
-	     print(i)
-	     --joint_positions_out:write(temp[i])
+	else print(temp[i])
+	     joint_positions_out:write(temp[i])
 	     i = i + 1
 	end
 end
 
---- Function containing RTT specific info to move pr2robot to some pose.
+--- Function containng RTT specific info to move pr2robot to some pose.
 function doPoseChecks()
-	print("doPoseChecks entered")
 	if TestSupPeertable.TestComponent:checkPoses()
 	then --do nothing 
 	else print ("    pose checks did not match!")
@@ -291,11 +290,14 @@ end
 function doJointValueChecks()
 	if TestSupPeertable.TestComponent:checkJointValues()
 	then --do nothing 
-	else print ("    pose checks did not match!")
+	else print ("    jointvalue checks did not match!")
 	     raise_common_event("e_checkError")
 	end
 end
 
+function passPositionToGen()
+	TestSupPeertable.TestComponent:passPositionToGen()
+end
 function updateRobot()
 	TestSupPeertable.Pr2Robot:updateRobotState()
 end
@@ -409,6 +411,10 @@ function connect_ports()
     roscp.name_id = "/head_tilt_velocity_controller/state"
     depl:stream(pr2connector .. ".head_tilt_joint_e", roscp)
 	
+end
+
+function configureObjectframes()
+	TestSupPeertable.Pr2Robot:configureObjectFrames()
 end
 
 
