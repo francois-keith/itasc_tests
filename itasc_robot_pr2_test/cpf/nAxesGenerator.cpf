@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "cpf.dtd">
+<properties>
+  <simple name="num_axes" type="ulong"><description>Number of Axes</description><value>20</value></simple>
+  <struct name="max_vel" type="float64[]">
+     <description>Maximum Velocity in Trajectory</description>
+     <simple name="Element0" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element1" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element2" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element3" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element4" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element5" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element6" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element7" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element8" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element9" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element10" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element11" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element12" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element13" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element14" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element15" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element16" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element17" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element18" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element19" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+  </struct>
+  <struct name="max_acc" type="float64[]">
+     <description>Maximum Acceleration in Trajectory</description>
+     <simple name="Element0" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element1" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element2" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element3" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element4" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element5" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element6" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element7" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element8" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element9" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element10" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element11" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element12" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element13" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element14" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element15" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element16" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element17" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element18" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element19" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+  </struct>
+  <simple name="movingTimeOnPort" type="double"><description>Moving time for desired positions on port. </description><value>0</value></simple>
+  <struct name="delayTimes" type="float64[]">
+     <description>Delay times for each joint. </description>
+     <simple name="Element0" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element1" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element2" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element3" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element4" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element5" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element6" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element7" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element8" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element9" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element10" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element11" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element12" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element13" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element14" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element15" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element16" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element17" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element18" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+     <simple name="Element19" type="double"><description>Sequence Element</description><value>0.4000000000000000222044605</value></simple>
+  </struct>
+</properties>
