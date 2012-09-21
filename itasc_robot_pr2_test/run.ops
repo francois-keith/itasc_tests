@@ -25,6 +25,7 @@ import("naxes_motion_control")
 loadComponent("Timer","OCL::TimerComponent")
 #loadComponent("Reporter","OCL::FileReporting")
 #loadComponent("event_firer","OCL::LuaComponent")
+loadComponent("reporter","OCL::FileReporting")
 
 #load application level components (trajectory generators...)
 loadComponent("test_supervisor","OCL::LuaComponent")
@@ -50,7 +51,7 @@ setActivity("nAxes_generator",				0.01,	1, ORO_SCHED_OTHER)
 setActivity("Pr2Robot",				0.01,	1, ORO_SCHED_OTHER)
 setActivity("pr2connector",				0.01,	1, ORO_SCHED_OTHER)
 setActivity("rtt_tf",				0.0,	1, ORO_SCHED_OTHER)
-
+setActivity("reporter",				0.01,	1, ORO_SCHED_OTHER)
 ### non-periodic iTaSC activities
 
 # to execute programs in the deployer, like connectToControllers
@@ -61,6 +62,10 @@ setActivity("rtt_tf",				0.0,	1, ORO_SCHED_OTHER)
 
 #connectPeers("test_supervisor","Solver")
 addPeer("test_supervisor","Deployer")
+
+connectPeers("reporter","pr2connector")
+connectPeers("reporter","TestComponent")
+connectPeers("reporter","Pr2Robot")
 
 connectPeers("test_supervisor","Timer")
 connectPeers("test_supervisor","nAxes_generator")
@@ -120,6 +125,8 @@ loadService("pr2connector","marshalling")
 pr2connector.marshalling.updateProperties(rospack.find("itasc_pr2") + "/cpf/pr2connect.cpf")
 loadService("nAxes_generator","marshalling")
 nAxes_generator.marshalling.updateProperties(rospack.find("itasc_robot_pr2_test") + "/cpf/nAxesGenerator.cpf")
+loadService("reporter","marshalling")
+reporter.marshalling.loadProperties(rospack.find("itasc_robot_pr2_test") + "/cpf/reporter.cpf")
 
 #test_supervisor.configure
 

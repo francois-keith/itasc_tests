@@ -194,6 +194,21 @@ function configureTrajectoryGenerator()
 end
 
 
+function configurereporter()
+	if TestSupPeertable.reporter:configure() 
+        then --print("   nAxes_generator configured") 
+        else print("    [test_supervisor]:function configureTrajectoryGenerator(): couldn't configure nAxes_generator")
+	     raise_common_event("e_emergency") end
+end
+
+function startreporter()
+	if TestSupPeertable.reporter:start() 
+        then --print("   cartesian_generator started") 
+        else print("    [test_supervisor]:function startPr2Robot(): couldn't start Pr2Robot")
+	     raise_common_event("e_emergency") 
+	end
+end
+
 --START
 --- Function containing RTT specific info to start Pr2Robot
 function startPr2Robot()

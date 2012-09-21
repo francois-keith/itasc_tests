@@ -98,7 +98,8 @@ NONemergency = rfsm.composite_state{
 			connect_ports()
 			configureTrajectoryGenerator()
 			configureObjectframes()
-			configureTestComponent()	
+			configureTestComponent()
+			configurereporter()	
 			raise_common_event("e_TestConfigured")
 		end,
 	},
@@ -117,6 +118,7 @@ NONemergency = rfsm.composite_state{
 			startPr2Connect()
 			--startTrajectoryGenerator() somewhere else!
 			startTestComponent()	
+			startreporter()
 			raise_common_event("e_startTest")
 		end,
 	},

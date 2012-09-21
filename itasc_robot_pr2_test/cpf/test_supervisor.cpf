@@ -107,14 +107,14 @@
            <simple name="Element2" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element3" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element4" type="double"><description>Sequence Element</description><value>0</value></simple>
-           <simple name="Element5" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element5" type="double"><description>Sequence Element</description><value>2</value></simple>
            <simple name="Element6" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element7" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element8" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element9" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element10" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element11" type="double"><description>Sequence Element</description><value>0</value></simple>
-           <simple name="Element12" type="double"><description>Sequence Element</description><value>0</value></simple>
+           <simple name="Element12" type="double"><description>Sequence Element</description><value>2</value></simple>
            <simple name="Element13" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element14" type="double"><description>Sequence Element</description><value>0</value></simple>
            <simple name="Element15" type="double"><description>Sequence Element</description><value>0</value></simple>

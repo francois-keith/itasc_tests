@@ -156,8 +156,11 @@ bool itasc_robot_pr2_test::checkJointValues(double eps) {
 	this->q_names_in.read(q_names);
 	//get information from ROS_topic
 	this->joint_state_port.read(jntstate);
-
-
+	
+	for(unsigned int i = 0; i < jntstate.position.size(); i++){
+		log(Warning) << "TestComponent jointvalues: " << i << " :" << jntstate.position[i] << endlog();	
+	}
+	
 	valueCheck = true;
 	//compare the results: a combination of name and position from the itasc_pr2 should be the same as some combination from the ros_topic
 	for(unsigned int i = 3; i < q_names.size(); i++){
