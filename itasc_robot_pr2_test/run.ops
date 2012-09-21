@@ -147,6 +147,7 @@ connect("Pr2Robot.qdot_to_robot", "pr2connector.qdot_in", cp)
 connect("Pr2Robot.joint_names", "pr2connector.joint_names", cp)
 connect("Pr2Robot.deltaqdot_in", "pr2connector.deltaqdot", cp)
 connect("Pr2Robot.base_frame", "pr2connector.base_frame", cp)
+connect("Pr2Robot.world_frame", "pr2connector.world_frame", cp)
 
 #connect port to signal finished nAxesGenerator
 connect("nAxes_generator.moveFinished", "test_supervisor.test_common_events_in", cp)

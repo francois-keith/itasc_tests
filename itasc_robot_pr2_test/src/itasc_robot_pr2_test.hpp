@@ -40,6 +40,7 @@
 #ifndef _ITASC_ROBOT_PR2_TEST_HPP_
 #define _ITASC_ROBOT_PR2_TEST_HPP_
 
+#include <math.h>
 #include <rtt/TaskContext.hpp>
 #include <rtt/Port.hpp>
 #include <rtt/RTT.hpp>
@@ -70,8 +71,8 @@ using namespace Eigen;
                 itasc_robot_pr2_test(const std::string& name = "itasc_robot_pr2_test");
                 ~itasc_robot_pr2_test(){};
 
-		virtual bool checkPoses();
-		virtual bool checkJointValues();
+		virtual bool checkPoses(double eps);
+		virtual bool checkJointValues(double eps);
 		
 		virtual bool configureHook();
 		virtual void convertJointPositions();
@@ -105,9 +106,9 @@ using namespace Eigen;
 		std::string base_frame;	
 		KDL::Frame ros_kdl_frame;
 		KDL::Frame itasc_kdl_frame;
-		double epsilon;
 
 		std::vector<InputPort<KDL::Frame>* > T_b_e_ports;
+		bool localresult, valueCheck;
 	};
 }
 #endif

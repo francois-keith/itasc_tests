@@ -65,6 +65,12 @@ function configureHook()
 	-- create a vector (table) of poses. ONLY INSERT KDL.FRAMES
 	poses_from_file=rtt.Property("motion_control_msgs.JointPositions[]", "poses_from_file", "vector with poses")
 	tc:addProperty(poses_from_file)
+	
+	-- create properties for epsilon_matrix and epsilon_scalar
+	epsilon_matrix = rtt.Property("double", "epsilon_matrix", "maximum error for matrix comparison")
+	tc:addProperty(epsilon_matrix)
+	epsilon_scalar = rtt.Property("double", "epsilon_scalar", "maximum error for scalar comparison")
+	tc:addProperty(epsilon_scalar)
 
 	-- FSM
 	-- load state machine
@@ -279,7 +285,7 @@ end
 
 --- Function containng RTT specific info to move pr2robot to some pose.
 function doPoseChecks()
-	if TestSupPeertable.TestComponent:checkPoses()
+	if TestSupPeertable.TestComponent:checkPoses(epsilon_matrix:get())
 	then --do nothing 
 	else print ("    pose checks did not match!")
 	     raise_common_event("e_checkError")
@@ -288,7 +294,7 @@ end
 
 --- Function containing RTT specific info to move pr2robot to some pose.
 function doJointValueChecks()
-	if TestSupPeertable.TestComponent:checkJointValues()
+	if TestSupPeertable.TestComponent:checkJointValues(epsilon_scalar:get())
 	then --do nothing 
 	else print ("    jointvalue checks did not match!")
 	     raise_common_event("e_checkError")

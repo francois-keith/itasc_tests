@@ -49,7 +49,6 @@ ORO_CREATE_COMPONENT(iTaSC::itasc_robot_pr2_test);
 namespace iTaSC {
 itasc_robot_pr2_test::itasc_robot_pr2_test(const std::string& name)
 	:TaskContext(name),
-	epsilon(10^-12),
 	base_frame("odom_combined") {
 	//ports
 	//input
@@ -66,7 +65,7 @@ itasc_robot_pr2_test::itasc_robot_pr2_test(const std::string& name)
 	this->ports()->addPort("jnt_to_test", jnt_value_check_to_test);
 	this->ports()->addPort("qdot_out", qdot_out);
 	this->ports()->addPort("msr_pos_out", msr_pos_out);
-	this->properties()->addProperty("epsilon", epsilon);
+	//this->properties()->addProperty("epsilon", epsilon);
 	this->properties()->addProperty("base_frame",base_frame).doc(
 		"the name of the base frame of the pr2");
 
@@ -116,9 +115,10 @@ bool itasc_robot_pr2_test::configureHook(){
 	return true;
 }
 
-bool itasc_robot_pr2_test::checkPoses() {
+bool itasc_robot_pr2_test::checkPoses(double eps) {
+	Logger::In in(this->getName());
 	
-
+	valueCheck = true;
 	// for all objectframes
 	for(unsigned int j = 0; j < objectFramesToBC.size(); j++){
 		//read in Frame from itasc_pr2 
@@ -136,42 +136,41 @@ bool itasc_robot_pr2_test::checkPoses() {
 		ros_kdl_frame.p = KDL::Vector(stfm.transform.translation.x,stfm.transform.translation.y,stfm.transform.translation.z);
 		ros_kdl_frame.M = KDL::Rotation::Quaternion(stfm.transform.rotation.x,stfm.transform.rotation.y,stfm.transform.rotation.z,stfm.transform.rotation.w);
 		
-		if(!KDL::Equal(itasc_kdl_frame, ros_kdl_frame, epsilon)) {
+		if(!KDL::Equal(itasc_kdl_frame, ros_kdl_frame, eps)) {
 				log(Warning) << "itasc frame \n" << itasc_kdl_frame << "ros frame \n" << ros_kdl_frame << endlog();
 				log(Warning) << "e_check of poses failed, frames weren't equal for objectframe :" << objectFramesToBC[j] << endlog();
-				return false;
+				valueCheck = false;
 
 		}
 
 	}
-	log(Warning) << "checkPoses: before write" << endlog();
-	//send event
-	pose_check_to_test.write("e_check of poses completed, all KDL::Frames were equal");
-	log(Warning) << "checkPoses: end" << endlog();
-	return true;
+
+	return valueCheck;
 }
 
-bool itasc_robot_pr2_test::checkJointValues() {
+bool itasc_robot_pr2_test::checkJointValues(double eps) {
+	Logger::In in(this->getName());	
+
 	//get information from itasc_pr2	
 	this->q_port_in.read(q_array);
 	this->q_names_in.read(q_names);
 	//get information from ROS_topic
 	this->joint_state_port.read(jntstate);
 
-	//turn jntstate into vector with names and vector with values: not necessary: just concatenate! 
 
-	bool localresult;
+	valueCheck = true;
 	//compare the results: a combination of name and position from the itasc_pr2 should be the same as some combination from the ros_topic
-	for(unsigned int i = 0; i < q_names.size();i++){
+	for(unsigned int i = 3; i < q_names.size(); i++){
 		localresult = false;
 		for(unsigned int j =0; j < jntstate.name.size() && !localresult; j++) {
 			if(q_names[i].compare(jntstate.name[j]) == 0){ //their names are equal! now the values should be too.
 				localresult = true;
-				if(q_array(i) != jntstate.position[j]){
+				if( (std::abs(q_array(i) - jntstate.position[j])) > eps){
 					log(Error) << "values for joint " << q_names[i] << " didn't match!" << endlog();
-					//send event by writing a string on output port	
-					jnt_value_check_to_test.write("e_joint value check failed, joint values for joint " + q_names[i] + "weren't equal");
-					return false; //values aren't equal!		
+					log(Error) << "value from itasc_pr2:" << q_array(i) << endlog();
+					log(Error) << "value from ROS:" << jntstate.position[j] << endlog();
+					//jnt_value_check_to_test.write("e_joint value check failed, joint values for joint " + q_names[i] + "weren't equal");
+					valueCheck = false; //values aren't equal!		
 				}
 			}	
 		}
@@ -185,15 +184,15 @@ bool itasc_robot_pr2_test::checkJointValues() {
 		log(Info) << "values for joint " << q_names[i] << " matched." << endlog();		
 		}
 	}	
-	//send event
-	jnt_value_check_to_test.write("e_joint value check completed, all joint values were equal");
-	return true;
+	return valueCheck;
 }
 
 void itasc_robot_pr2_test::convertJointPositions() {
+	Logger::In in(this->getName());
+
 	//read from port
-	desired_pos_in.read(temp_desired_pos);
-	//omzetten van temp_desired_pos (motion_control_msgs::jointpositions) to temp_qdot_out (KDL::JntArray)
+	if(desired_pos_in.read(temp_desired_pos) == NoData) log(Error) << "can't pass information to pr2robot, no data on desired_pos_in" << endlog();
+	//convert temp_desired_pos (motion_control_msgs::jointpositions) to temp_qdot_out (KDL::JntArray)
 	for(unsigned int j = 0; j < temp_desired_pos.velocities.size(); j++){
 		temp_qdot_out(j) = temp_desired_pos.velocities[j];
 	}
@@ -203,12 +202,14 @@ void itasc_robot_pr2_test::convertJointPositions() {
 }
 
 void itasc_robot_pr2_test::passPositionToGen(){
+	Logger::In in(this->getName());
+
 	if(q_port_in.read(temp_qdot_in) == NoData){ //read in values
 		log(Error) << "can't pass information to generator, no data on q_port_in" << endlog();
 	}
 
 	tempjointstate.position.resize(temp_qdot_in.rows());
-	//omzetten van temp_desired_pos (motion_control_msgs::jointpositions) to temp_qdot_out (KDL::JntArray)
+	//convert temp_desired_pos (motion_control_msgs::jointpositions) to temp_qdot_out (KDL::JntArray)
 	for(unsigned int j = 0; j < temp_qdot_in.rows(); j++){
 		 tempjointstate.position[j] = temp_qdot_in(j);
 	}
