@@ -9,7 +9,7 @@
     <depend package="itasc_pr2" />
     <depend package="kdl_typekit"/>
     <depend package="kdl_parser"/>
-    <depend package="eigen"/>
+    <rosdep name="eigen"/>
     <depend package="itasc_core"/>
     <depend package="rtt_rosnode"/>
     <depend package="rtt_std_msgs"/>

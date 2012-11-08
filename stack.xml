@@ -5,5 +5,7 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/itasc_tests</url>
   <depend stack="ros" />
+  <depend stack="itasc" />
+  <depend stack="trajectory_generators" />
 
 </stack>

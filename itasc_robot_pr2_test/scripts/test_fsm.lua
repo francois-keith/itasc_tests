@@ -96,6 +96,7 @@ NONemergency = rfsm.composite_state{
 	ConfiguringSecondPart = rfsm.simple_state{
 		entry = function()
 			connect_ports()
+            unlockRobots()
 			configureTrajectoryGenerator()
 			configureObjectframes()
 			configureTestComponent()
@@ -162,7 +163,11 @@ NONemergency = rfsm.composite_state{
 	StoppingTest = rfsm.simple_state{
 		entry = function ()
 			--print("=>iTaSCFSM->StoppingITASC state entry")
-			--stopAllComponents()
+		    lockRobots() 
+            stopPr2connector()
+            stopPr2Robot()
+            stopTrajectoryGenerator()
+            stopTestComponent()
 			raise_trigger_event("e_stopTest")
 		end,
 	},
@@ -194,6 +199,7 @@ NONemergency = rfsm.composite_state{
 TestEmergency = rfsm.simple_state{
 	entry = function ()
 		--stopAllComponents()
+        lockRobots() 
 		raise_priority_event("e_emergency")
 		--print("[EMERGENCY] =>iTaSC application in emergency state!")
 		--print("[EMERGENCY] =>iTaSC has therefore raised an priority emergency event")

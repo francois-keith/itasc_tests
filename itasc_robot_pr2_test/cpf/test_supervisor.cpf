@@ -3,8 +3,8 @@
 <properties>
   <simple name="lua_string" type="string"><description>string of lua code to be executed during configureHook</description><value></value></simple>
   <simple name="lua_file" type="string"><description>file with lua program to be executed during configuration</description><value></value></simple>
-  <simple name="epsilon_matrix" type="double"><description>maximum error for matrix comparison</description><value>0.001</value></simple>
-  <simple name="epsilon_scalar" type="double"><description>maximum error for scalar comparison</description><value>0.001</value></simple>
+  <simple name="epsilon_matrix" type="double"><description>maximum error for matrix comparison</description><value>0.1</value></simple>
+  <simple name="epsilon_scalar" type="double"><description>maximum error for scalar comparison</description><value>0.1</value></simple>
   <struct name="OF_from_file" type="string[]">
     <description>vector with objectframe names</description>
     <simple name="Element0" type="string">

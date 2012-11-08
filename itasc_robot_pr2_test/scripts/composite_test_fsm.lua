@@ -55,6 +55,14 @@ return state {
         end
     },
 
+    testSucceeded = state{
+        doo=function ()
+            print(" !!! TEST SUCCEEDED !!! ")
+            print("Quiting the test")
+            raise_common_event('e_stopTest')
+        end
+    },
+
     -- checkError state
     checkError = state {
 	doo=function ()
@@ -65,12 +73,13 @@ return state {
     trans{ src='initial', tgt='initializing' },
     trans{src='initializing', tgt='Initialized'},
     rfsm.transition { src='Initialized', tgt='move'},
-    trans{src = 'move', tgt = 'waitForMoveToFinish', events={"move_finished"}},
-    trans{src = 'move', tgt = 'waitForMoveToFinish', events={"traj_finished"}},
+    trans{src = 'move', tgt = 'waitForMoveToFinish', events={"nAxes_generator_move_finished"}},
+    trans{src = 'move', tgt = 'waitForMoveToFinish', events={"nAxes_generator_traj_finished"}},
     trans{src = 'waitForMoveToFinish', tgt = 'doJointChecks', events={'e_after(5)'}},
     trans{src='doChecks', tgt='checkError', events={'e_checkError'}},
     trans{src='doJointChecks', tgt='checkError', events={'e_checkError'}},
     trans{src='doJointChecks', tgt='doChecks', events={'e_jointchecks_completed'}},
     trans{src='doChecks', tgt='move', events={'e_posechecks_completed'}},
-    trans{src='checkError', tgt='Initialized', events={'e_done'} }
+    trans{src='checkError', tgt='Initialized', events={'e_done'} },
+    trans{src='move', tgt='testSucceeded', events={'e_test_done'} }
 }

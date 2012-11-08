@@ -160,7 +160,7 @@ end
 function configurePr2Robot()
 	if TestSupPeertable.Pr2Robot:configure() 
         then --print("   pr2Robot configured") 
-        else print("    [test_supervisor]:function configurePr2Robot(): couldn't configure Pr2Robot")
+        else print("    [" .. tc:getName() .. "]:function configurePr2Robot(): couldn't configure Pr2Robot")
 	     raise_common_event("e_emergency") end
 end
 
@@ -171,7 +171,7 @@ end
 function configurePr2Connect()
 	if TestSupPeertable.pr2connector:configure() 
         then return true
-        else --print("    [test_supervisor]:function configurePr2Connect(): couldn't configure pr2connector")
+        else --print("    [" .. tc:getName() .. "]:function configurePr2Connect(): couldn't configure pr2connector")
 	     return false
 	end
 end
@@ -181,7 +181,7 @@ end
 function configureTestComponent()
 	if TestSupPeertable.TestComponent:configure() 
         then --print("   cartesian_generator configured") 
-        else print("    [test_supervisor]:function configureTestComponent(): couldn't configure TestComponent")
+        else print("    [" .. tc:getName() .. "]:function configureTestComponent(): couldn't configure TestComponent")
 	     raise_common_event("e_emergency") end
 end
 
@@ -189,7 +189,7 @@ end
 function configureTrajectoryGenerator()
 	if TestSupPeertable.nAxes_generator:configure() 
         then --print("   nAxes_generator configured") 
-        else print("    [test_supervisor]:function configureTrajectoryGenerator(): couldn't configure nAxes_generator")
+        else print("    [" .. tc:getName() .. "]:function configureTrajectoryGenerator(): couldn't configure nAxes_generator")
 	     raise_common_event("e_emergency") end
 end
 
@@ -197,14 +197,14 @@ end
 function configurereporter()
 	if TestSupPeertable.reporter:configure() 
         then --print("   nAxes_generator configured") 
-        else print("    [test_supervisor]:function configureTrajectoryGenerator(): couldn't configure nAxes_generator")
+        else print("    [" .. tc:getName() .. "]:function configureTrajectoryGenerator(): couldn't configure nAxes_generator")
 	     raise_common_event("e_emergency") end
 end
 
 function startreporter()
 	if TestSupPeertable.reporter:start() 
         then --print("   cartesian_generator started") 
-        else print("    [test_supervisor]:function startPr2Robot(): couldn't start Pr2Robot")
+        else print("    [" .. tc:getName() .. "]:function startPr2Robot(): couldn't start Pr2Robot")
 	     raise_common_event("e_emergency") 
 	end
 end
@@ -214,7 +214,7 @@ end
 function startPr2Robot()
 	if TestSupPeertable.Pr2Robot:start() 
         then --print("   cartesian_generator started") 
-        else print("    [test_supervisor]:function startPr2Robot(): couldn't start Pr2Robot")
+        else print("    [" .. tc:getName() .. "]:function startPr2Robot(): couldn't start Pr2Robot")
 	     raise_common_event("e_emergency") 
 	end
 end
@@ -223,7 +223,7 @@ end
 function startPr2Connect()
 	if TestSupPeertable.pr2connector:start() 
         then --print("   cartesian_generator started") 
-        else print("    [test_supervisor]:function startPr2Connect(): couldn't start Pr2Connect")
+        else print("    [" .. tc:getName() .. "]:function startPr2Connect(): couldn't start Pr2Connect")
 	     raise_common_event("e_emergency") 
 	end
 end
@@ -231,7 +231,7 @@ end
 function startTestComponent()
 	if TestSupPeertable.TestComponent:start() 
         then --print("   cartesian_generator started") 
-        else print("    [test_supervisor]:function startTestComponent(): couldn't start TestComponent")
+        else print("    [" .. tc:getName() .. "]:function startTestComponent(): couldn't start TestComponent")
 	     raise_common_event("e_emergency") 
 	end
 end
@@ -239,7 +239,7 @@ end
 function startTrajectoryGenerator()
 	if TestSupPeertable.nAxes_generator:start() 
         then --print("   nAxes_generator started") 
-        else print("    [test_supervisor]:function startTrajectoryGenerator(): couldn't start nAxes_generator")
+        else print("    [" .. tc:getName() .. "]:function startTrajectoryGenerator(): couldn't start nAxes_generator")
 	     raise_common_event("e_emergency") 
 	end
 end
@@ -250,25 +250,25 @@ end
 function stopPr2Robot()
 	if TestSupPeertable.Pr2Robot:stop() 
         then --print("   cartesian_generator stopped") 
-        else print("    [test_supervisor]:function stopPr2Robot(): couldn't stop Pr2Robot")
+        else print("    [" .. tc:getName() .. "]:function stopPr2Robot(): couldn't stop Pr2Robot")
 	     raise_common_event("e_emergency") 
 	end
 end
 
 --- Function containing RTT specific info to stop Pr2Connect
-function stopTrajectoryGenerator()
+function stopPr2connector()
 	if TestSupPeertable.pr2connector:stop() 
         then --print("   cartesian_generator stopped") 
-        else print("    [test_supervisor]:function stopPr2Connect(): couldn't stop Pr2Connect")
+        else print("    [" .. tc:getName() .. "]:function stopPr2Connect(): couldn't stop Pr2Connect")
 	     raise_common_event("e_emergency") 
 	end
 end
 
 --- Function containing RTT specific info to stop TestComponent
-function stopTrajectoryGenerator()
+function stopTestComponent()
 	if TestSupPeertable.TestComponent:stop() 
         then --print("   cartesian_generator stopped") 
-        else print("    [test_supervisor]:function stopTestComponent(): couldn't stop TestComponent")
+        else print("    [" .. tc:getName() .. "]:function stopTestComponent(): couldn't stop TestComponent")
 	     raise_common_event("e_emergency") 
 	end
 end
@@ -277,24 +277,23 @@ end
 function stopTrajectoryGenerator()
 	if TestSupPeertable.nAxes_generator:stop() 
         then --print("   nAxes_generator stopped") 
-        else print("    [test_supervisor]:function stopTrajectoryGenerator(): couldn't stop nAxes_generator")
+        else print("    [" .. tc:getName() .. "]:function stopTrajectoryGenerator(): couldn't stop nAxes_generator")
 	     raise_common_event("e_emergency") 
 	end
 end
 
-
-
+--------------------
 
 --- Function containing RTT specific info to move pr2robot to some pose.
 function moveToNextPosition()
 	print("move to next entered")
 	temp = poses_from_file:get()
 	print("temp read in")
-	if(i > temp.size )
-	then --do nothing, all moves are done
-	else print(temp[i])
+	if(i < temp.size )
+	then print(temp[i])
 	     joint_positions_out:write(temp[i])
 	     i = i + 1
+	else raise_common_event("e_test_done") --all moves are done
 	end
 end
 
@@ -339,6 +338,7 @@ function connect_ports()
 	-- lua:
 	-- all assuming the iTaSC::pr2connect component is named 'pr2connector'
 	local string pr2connector = "pr2connector"
+    rtt.logl('Info',"[" .. tc:getName() .. "] Connecting PR2 to " .. pr2connector)
 	depl = tc:getPeer("Deployer")
 	-- ROS connection policy
 	roscp=rtt.Variable("ConnPolicy")
@@ -438,4 +438,17 @@ function configureObjectframes()
 	TestSupPeertable.Pr2Robot:configureObjectFrames()
 end
 
+--- Function containing RTT specific info to unlock robots
+function unlockRobots()
+    if TestSupPeertable.pr2connector:unlockAllAxes() 
+    then print("   [" .. tc:getName() .. " axes unlocked!") 
+    else 
+        print("   [" .. tc:getName() .. " unable to unlock axes!")
+        raise_common_event("e_emergency")  
+    end 
+end
 
+--- Function containing RTT specific info to unlock robots
+function lockRobots()
+    if TestSupPeertable.pr2connector:lockAllAxes() then print("   [" .. tc:getName() .. " axes locked!") else raise_common_event("e_emergency")  end
+end
