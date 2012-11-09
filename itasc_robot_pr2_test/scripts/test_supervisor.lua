@@ -282,6 +282,11 @@ function stopTrajectoryGenerator()
 	end
 end
 
+--- Function to kill the application
+function killTest(status)
+    os.exit(status)
+end
+
 --------------------
 
 --- Function containing RTT specific info to move pr2robot to some pose.

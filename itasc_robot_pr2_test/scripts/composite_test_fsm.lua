@@ -66,7 +66,9 @@ return state {
     -- checkError state
     checkError = state {
 	doo=function ()
-		raise_common_event("e_emergency")
+        print(" !!! TEST FAILED !!! ")
+        print("Quiting the test")
+        raise_common_event('e_stopTest')
 	end
     },
 

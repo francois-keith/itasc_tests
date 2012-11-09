@@ -176,6 +176,7 @@ NONemergency = rfsm.composite_state{
 		entry=function()
 			--print("=>iTaSCFSM->StoppedITASC state")
 			raise_common_event("e_TestStopped")
+            killTest(0)
 		end,
 	},
 	

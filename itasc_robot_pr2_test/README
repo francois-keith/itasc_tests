@@ -1,0 +1,17 @@
+How to run the test:
+--------------------
+1)in a first terminal: $roslaunch gazebo_worlds empty_world.launch
+2)in a second terminal: $roslaunch pr2_gazebo pr2.launch
+3)in a thirth terminal: 
+    a)$roscd itasc_robot_pr2_test
+    b)$./runControllers.sh
+4)in a fourth terminal:
+    a)$roscd itasc_robot_pr2_test
+    b)$./run.sh
+
+Notes:
+------
+The test will show:
+[ ERROR  ][pr2connector] no data available on joint_state_from_robot
+which is not a real error, it will wait for the data to be available.
+TODO: clean this up
