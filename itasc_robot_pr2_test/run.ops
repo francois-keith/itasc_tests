@@ -162,7 +162,7 @@ connect("nAxes_generator.moveFinished", "test_supervisor.test_common_events_in",
 #connect ports to get info for tests
 connect("test_supervisor.objectframes_out", "TestComponent.objectFramesPort", cp)
 connect("TestComponent.q_names_in", "Pr2Robot.joint_names", cp)
-connect("TestComponent.q_port_in", "Pr2Robot.q_port", cp)
+connect("TestComponent.q_port_in", "Pr2Robot.q", cp)
 
 connect("test_supervisor.objectframes_out", "Pr2Robot.objectFramesPort", cp)
 

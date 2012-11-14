@@ -15,3 +15,5 @@ The test will show:
 [ ERROR  ][pr2connector] no data available on joint_state_from_robot
 which is not a real error, it will wait for the data to be available.
 TODO: clean this up
+
+if you get an error saying he could not create the KDL tree/ robot xml description not found: run the convert_xacro script in itasc_pr2
