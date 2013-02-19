@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "cpf.dtd">
+<properties>
+  <simple name="nq" type="ulong"><value>7</value></simple>
+  <simple name="priorityNo" type="ulong"><value>1</value></simple>
+  <struct name="nc_priorities" type="int32[]">
+     <simple name="Element0" type="long"><description>Sequence Element</description><value>6</value></simple>
+  </struct>
+  <struct name="A_1" type="KDL.Jacobian">
+     <simple name="Element (0,0)" type="double"><description>Jacobian element</description><value>1</value></simple>
+     <simple name="Element (0,1)" type="double"><description>Jacobian element</description><value>1.358903347795115636828463e+248</value></simple>
+     <simple name="Element (0,2)" type="double"><description>Jacobian element</description><value>3.931710675136326477752936e-317</value></simple>
+     <simple name="Element (0,3)" type="double"><description>Jacobian element</description><value>6.927159406307252713345111e-310</value></simple>
+     <simple name="Element (0,4)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (0,5)" type="double"><description>Jacobian element</description><value>1.976262583364986176706275e-323</value></simple>
+     <simple name="Element (0,6)" type="double"><description>Jacobian element</description><value>9.486060400151933648190121e-322</value></simple>
+     <simple name="Element (1,0)" type="double"><description>Jacobian element</description><value>6.927160973218266883091568e-310</value></simple>
+     <simple name="Element (1,1)" type="double"><description>Jacobian element</description><value>2.256434152743841836323565e-80</value></simple>
+     <simple name="Element (1,2)" type="double"><description>Jacobian element</description><value>1.715889988006649247925223e-320</value></simple>
+     <simple name="Element (1,3)" type="double"><description>Jacobian element</description><value>-nan</value></simple>
+     <simple name="Element (1,4)" type="double"><description>Jacobian element</description><value>3.169668269581600379233894e-317</value></simple>
+     <simple name="Element (1,5)" type="double"><description>Jacobian element</description><value>2.441274054904884304078991e+232</value></simple>
+     <simple name="Element (1,6)" type="double"><description>Jacobian element</description><value>4.74303020007596682409506e-322</value></simple>
+     <simple name="Element (2,0)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (2,1)" type="double"><description>Jacobian element</description><value>8.887725927587717461261504e+252</value></simple>
+     <simple name="Element (2,2)" type="double"><description>Jacobian element</description><value>1.912744713430602174992465e-316</value></simple>
+     <simple name="Element (2,3)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (2,4)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (2,5)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (2,6)" type="double"><description>Jacobian element</description><value>1.917310670503208639055127e-316</value></simple>
+     <simple name="Element (3,0)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (3,1)" type="double"><description>Jacobian element</description><value>3.208370375683692561820903e-80</value></simple>
+     <simple name="Element (3,2)" type="double"><description>Jacobian element</description><value>1.91360794492701600095445e-316</value></simple>
+     <simple name="Element (3,3)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (3,4)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (3,5)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (3,6)" type="double"><description>Jacobian element</description><value>2.37151510003798341204753e-322</value></simple>
+     <simple name="Element (4,0)" type="double"><description>Jacobian element</description><value>2.261814921777018292633989e-80</value></simple>
+     <simple name="Element (4,1)" type="double"><description>Jacobian element</description><value>1.569481360728559940340587e+248</value></simple>
+     <simple name="Element (4,2)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (4,3)" type="double"><description>Jacobian element</description><value>5.549757839710462322151354e+180</value></simple>
+     <simple name="Element (4,4)" type="double"><description>Jacobian element</description><value>2.121995664484466979752267e-314</value></simple>
+     <simple name="Element (4,5)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (4,6)" type="double"><description>Jacobian element</description><value>2.121995790471206669270136e-314</value></simple>
+     <simple name="Element (5,0)" type="double"><description>Jacobian element</description><value>5.234909985389348928500474e+180</value></simple>
+     <simple name="Element (5,1)" type="double"><description>Jacobian element</description><value>7.431385893115509303835199e+221</value></simple>
+     <simple name="Element (5,2)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (5,3)" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="Element (5,4)" type="double"><description>Jacobian element</description><value>3.169668269581600379233894e-317</value></simple>
+     <simple name="Element (5,5)" type="double"><description>Jacobian element</description><value>9.297979304242435451483887e+199</value></simple>
+     <simple name="Element (5,6)" type="double"><description>Jacobian element</description><value>1.099340845827272859230874e+248</value></simple>
+  </struct>
+  <struct name="ydot_1" type="eigen_vector">
+     <simple name="1" type="double"><description>1th element of vector</description><value>2</value></simple>
+     <simple name="2" type="double"><description>2th element of vector</description><value>1.3</value></simple>
+     <simple name="3" type="double"><description>3th element of vector</description><value>2.1</value></simple>
+     <simple name="4" type="double"><description>4th element of vector</description><value>0.2</value></simple>
+     <simple name="5" type="double"><description>5th element of vector</description><value>2.3</value></simple>
+     <simple name="6" type="double"><description>6th element of vector</description><value>0.9</value></simple>
+  </struct>
+</properties>

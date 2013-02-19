@@ -1,0 +1,55 @@
+# deploy script, call with corresponding bash script
+require("print")
+
+#### import components, requires correctly setup RTT_COMPONENT_PATH or ROS_PACKAGE_PATH
+import("ocl")
+import("kdl_typekit")
+import("rtt_rosnode")
+
+#import the iTaSC core
+import("itasc_core")
+#import a solver
+import("wdls_prior_vel_solver")
+#import robots and objects
+import("itasc_solver_test")
+
+#### load components
+#### -------------------------------------------------------
+# general components
+loadComponent("Solver","iTaSC::WDLSPriorVelSolver")
+loadComponent("tester","iTaSC::Itasc_solver_wdlspriorvel_test")
+
+#### set activities
+#### -------------------------------------------------------
+# create activity for producer: period=0.01, priority=0, sched type
+### periodic activities
+setActivity("Solver",				0.0,	98, ORO_SCHED_RT)
+setActivity("tester",				0.01,	98, ORO_SCHED_RT)
+
+connectPeers("Solver", "tester")
+
+#### load property files
+#### -------------------------------------------------------
+loadService("Solver","marshalling")
+loadService("tester","marshalling")
+
+tester.marshalling.updateProperties(rospack.find("itasc_solver_test")+"/cpf/tester.cpf")
+
+#### connect ports
+#### -------------------------------------------------------
+# create connectionPolicies
+var ConnPolicy cp
+connect("tester.nc_priorities","Solver.nc_priorities",cp)
+
+# put the required attributes and info on the ports
+tester.configure
+# configure solver
+Solver.configure
+# connect other ports
+connect("tester.Wq","Solver.Wq",cp)
+connect("tester.qdot","Solver.qdot",cp)
+connect("tester.A_1","Solver.A_1",cp)
+connect("tester.Wy_1","Solver.Wy_1",cp)
+connect("tester.ydot_1","Solver.ydot_1",cp)
+# start tester
+#tester.start
