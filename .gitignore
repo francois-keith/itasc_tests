@@ -1,1 +1,6 @@
 orocos.log
+*~
+.*.swp
+build
+lib
+.tb_history
