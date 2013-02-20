@@ -2,6 +2,21 @@
 #include <ocl/Component.hpp>
 #include <iostream>
 
+namespace
+{
+  bool compare (const Eigen::VectorXd & v1, const Eigen::VectorXd & v2, bool tol = 1e-9)
+  {
+    if (v1.size() != v2.size())
+      return false;
+    for (unsigned i=0; i<v1.size(); ++i)
+    {
+      if (fabs(v1[i] - v2[i]) < tol)
+        return false;
+    }
+    return true;
+  }
+}
+
 namespace iTaSC {
 using namespace RTT;
 using namespace KDL;
@@ -25,6 +40,11 @@ A_1_kdl(Jacobian(7))
     this->properties()->addProperty("A_1", A_1_kdl);
     //this->properties()->addProperty("Wy_1", Wy_1);
     this->properties()->addProperty("ydot_1", ydot_1);
+
+    //
+    this->ports()->addPort("qdot_expected",qdot_expected_port).doc("expected qdot");
+    this->properties()->addProperty("qdot_expected", qdot_expected);
+
     //this->properties()->addProperty("Wq", Wq);
 
     nc = nc_priorities[0];
@@ -33,6 +53,8 @@ A_1_kdl(Jacobian(7))
     Wq.resize(nq, nq);
     ydot_1.resize(nc);
     qdot.resize(nq);
+    qdot_expected.resize(nq);
+
     Wy_1.setIdentity();
     Wq.setIdentity();
   std::cout << "Itasc_solver_wdlspriorvel_test constructed !" <<std::endl;
@@ -77,6 +99,23 @@ void Itasc_solver_wdlspriorvel_test::updateHook(){
     solve();
     //read from port
     qdot_port.read(qdot);
+
+    // Validate the received solution.
+    if(! (compare(qdot, qdot_expected, 1e-9)) )
+    {
+      std::cout << "Success ! " << std::endl;
+      // Todo: interrupt properly
+      //  ie not std::exit(0);
+    }
+    else
+    {
+      std::cerr.precision(12);
+      std::cerr << "Fuu ! " << std::endl;
+      std::cerr << " qdot " << qdot.transpose() << std::endl;
+      std::cerr << " qdot_expected " << qdot_expected.transpose() << std::endl;
+      std::cerr << " diff = " << (qdot_expected - qdot).transpose() << std::endl;
+//      std::exit(-1);
+    }
 }
 
 void Itasc_solver_wdlspriorvel_test::stopHook() {
