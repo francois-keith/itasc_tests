@@ -10,7 +10,7 @@ namespace
       return false;
     for (unsigned i=0; i<v1.size(); ++i)
     {
-      if (fabs(v1[i] - v2[i]) < tol)
+      if (fabs(v1[i] - v2[i]) > tol)
         return false;
     }
     return true;
@@ -122,24 +122,26 @@ void Itasc_solver_wdlspriorvel_test::updateHook(){
 
     //call solve()
     solve();
-    //read from port
-    qdot_port.read(qdot);
 
-    // Validate the received solution.
-    if(! (compare(qdot, qdot_expected, 1e-9)) )
+    //read from port
+    if( qdot_port.read(qdot) != RTT::NoData)
     {
-      std::cout << "Success ! " << std::endl;
-      // Todo: interrupt properly
-      //  ie not std::exit(0);
-    }
-    else
-    {
-      std::cerr.precision(12);
-      std::cerr << "Fuu ! " << std::endl;
-      std::cerr << " qdot " << qdot.transpose() << std::endl;
-      std::cerr << " qdot_expected " << qdot_expected.transpose() << std::endl;
-      std::cerr << " diff = " << (qdot_expected - qdot).transpose() << std::endl;
-//      std::exit(-1);
+        // Validate the received solution.
+        if( (compare(qdot, qdot_expected, 1e-9)) )
+        {
+          std::cout << "Success ! " << std::endl;
+          // Todo: interrupt properly
+          //  ie not std::exit(0);
+        }
+        else
+        {
+          std::cerr.precision(12);
+          std::cerr << "Fuu ! " << std::endl;
+          std::cerr << " qdot " << qdot.transpose() << std::endl;
+          std::cerr << " qdot_expected " << qdot_expected.transpose() << std::endl;
+          std::cerr << " diff = " << (qdot_expected - qdot).transpose() << std::endl;
+    //      std::exit(-1);
+        }
     }
 }
 
