@@ -7,6 +7,7 @@
     <author>Unknown Author</author>
     <depend package="rtt" />
     <depend package="orocos_kdl" />
+    <depend package="wdls_prior_vel_solver" />
     <rosdep name="eigen"/>
 </package>
 
