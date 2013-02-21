@@ -55,6 +55,8 @@ nc_priorities(std::vector<int>(1,6))
     std::stringstream ssName;
     std::string pname;
     priorities.resize(priorityNo);
+
+    // TODO Priority:creator
     for (unsigned int i=0;i<priorityNo;i++)
     {
         priorities[i] = new Priority();
@@ -90,23 +92,25 @@ nc_priorities(std::vector<int>(1,6))
         this->properties()->addProperty(pname, priorities[i]->inequalities);
 
         priorities[i]->A.resize(nc, nq);
-        priorities[i]->Wy.resize(nc, nc);
+        priorities[i]->Wy = Eigen::MatrixXd::Identity(nc, nc);
         priorities[i]->ydot.resize(nc);
         priorities[i]->ydot_max.resize(0);
         priorities[i]->inequalities.resize(0);
-        priorities[i]->Wy.setIdentity();
     }
     std::cout << "Itasc_solver_wdlspriorvel_test constructed !" <<std::endl;
 }
 
-bool Itasc_solver_wdlspriorvel_test::configureHook(){
+
+bool Itasc_solver_wdlspriorvel_test::configureHook()
+{
     nc = nc_priorities[0];
 
     Wq = Eigen::MatrixXd::Identity(nq, nq);
+
+    // TODO Priority:configureHook
     for (unsigned int i=0;i<priorityNo;i++)
     {
-        priorities[i]->Wy.resize(nc, nc);
-        priorities[i]->Wy.setIdentity();
+        priorities[i]->Wy = Eigen::MatrixXd::Identity(nc, nc);
 
         priorities[i]->A = priorities[i]->A_kdl.data;
     }
@@ -137,6 +141,7 @@ void Itasc_solver_wdlspriorvel_test::updateHook()
     //put dummy data on port
     Wq_port.write(Wq);
 
+    // TODO Priority:updateHook
     for (unsigned int i=0;i<priorityNo;i++)
     {
         priorities[i]->A_port.write(priorities[i]->A);
