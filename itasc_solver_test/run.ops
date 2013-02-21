@@ -45,13 +45,22 @@ connect("tester.nc_priorities","Solver.nc_priorities",cp)
 tester.configure
 # configure solver
 Solver.configure
+
 # connect other ports
 connect("tester.Wq","Solver.Wq",cp)
 connect("tester.qdot","Solver.qdot",cp)
+
 connect("tester.A_1","Solver.A_1",cp)
 connect("tester.Wy_1","Solver.Wy_1",cp)
 connect("tester.ydot_1","Solver.ydot_1",cp)
 connect("tester.ydot_max_1","Solver.ydot_max_1",cp)
 connect("tester.inequalities_1","Solver.inequalities_1",cp)
+
+connect("tester.A_2","Solver.A_2",cp)
+connect("tester.Wy_2","Solver.Wy_2",cp)
+connect("tester.ydot_2","Solver.ydot_2",cp)
+connect("tester.ydot_max_2","Solver.ydot_max_2",cp)
+connect("tester.inequalities_2","Solver.inequalities_2",cp)
+
 # start tester
 tester.start
