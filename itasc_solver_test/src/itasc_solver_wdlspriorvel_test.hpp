@@ -25,7 +25,7 @@ class Itasc_solver_wdlspriorvel_test : public RTT::TaskContext{
     void stopHook();
     void cleanupHook();
   private:
-    unsigned int nq, nc;
+    unsigned int nq;
     unsigned int priorityNo;
 
     // ...

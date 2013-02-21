@@ -26,11 +26,16 @@ using namespace KDL;
 
 Itasc_solver_wdlspriorvel_test::Itasc_solver_wdlspriorvel_test(std::string const& name) : TaskContext(name),
 nq(7),
-priorityNo(1),
-nc_priorities(std::vector<int>(1,6))
+priorityNo(2),
+nc_priorities()
 {
+    nc_priorities.resize(priorityNo,0);
+//    nc_priorities[0] = 2;
+//    nc_priorities[1] = 6;
+
     this->ports()->addPort("qdot",qdot_port).doc("desired robot joint            velocities");
     this->addPort("nc_priorities",nc_priorities_port).doc("Port with vector of       number of constraints per priority.");
+    this->provides()->addAttribute("priorityNo", priorityNo); //"Number of priorities involved. (default = 1)"
 
 
     this->properties()->addProperty("nq", nq);
@@ -47,8 +52,6 @@ nc_priorities(std::vector<int>(1,6))
     //this->properties()->addProperty("Wq", Wq);
 
     //
-    nc = nc_priorities[0];
-
     qdot.resize(nq);
     qdot_expected.resize(nq);
 
@@ -60,6 +63,7 @@ nc_priorities(std::vector<int>(1,6))
     for (unsigned int i=0;i<priorityNo;i++)
     {
         priorities[i] = new Priority();
+        int nc = nc_priorities[i];
 
         ssName.clear();
         ssName << "A_" << i+1;
@@ -97,21 +101,19 @@ nc_priorities(std::vector<int>(1,6))
         priorities[i]->ydot_max.resize(0);
         priorities[i]->inequalities.resize(0);
     }
-    std::cout << "Itasc_solver_wdlspriorvel_test constructed !" <<std::endl;
+//    std::cout << "Itasc_solver_wdlspriorvel_test constructed !" <<std::endl;
 }
 
 
 bool Itasc_solver_wdlspriorvel_test::configureHook()
 {
-    nc = nc_priorities[0];
-
     Wq = Eigen::MatrixXd::Identity(nq, nq);
 
     // TODO Priority:configureHook
     for (unsigned int i=0;i<priorityNo;i++)
     {
+        int nc = nc_priorities[i];
         priorities[i]->Wy = Eigen::MatrixXd::Identity(nc, nc);
-
         priorities[i]->A = priorities[i]->A_kdl.data;
     }
 
@@ -122,17 +124,18 @@ bool Itasc_solver_wdlspriorvel_test::configureHook()
     nq_att.set(nq);
     priorityNo_att.set(priorityNo);
 
-  //set nc_priorities on port
+    //set nc_priorities on port
     nc_priorities_port.write(nc_priorities);
-  //get solve method (but don't call it yet
+
+    //get solve method (but don't call it yet
     solve = solver_ptr->getOperation("solve"); 
 
-  std::cout << "Itasc_solver_wdlspriorvel_test configured !" <<std::endl;
+//  std::cout << "Itasc_solver_wdlspriorvel_test configured !" <<std::endl;
   return true;
 }
 
 bool Itasc_solver_wdlspriorvel_test::startHook(){
-  std::cout << "Itasc_solver_wdlspriorvel_test started !" <<std::endl;
+//  std::cout << "Itasc_solver_wdlspriorvel_test started !" <<std::endl;
   return true;
 }
 
@@ -175,7 +178,7 @@ void Itasc_solver_wdlspriorvel_test::updateHook()
         else
         {
           std::cerr.precision(12);
-          std::cerr << "Fuu ! " << std::endl;
+          std::cerr << "Test failed ! " << std::endl;
           std::cerr << " qdot " << qdot.transpose() << std::endl;
           std::cerr << " qdot_expected " << qdot_expected.transpose() << std::endl;
           std::cerr << " diff = " << (qdot_expected - qdot).transpose() << std::endl;
