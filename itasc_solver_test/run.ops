@@ -51,5 +51,7 @@ connect("tester.qdot","Solver.qdot",cp)
 connect("tester.A_1","Solver.A_1",cp)
 connect("tester.Wy_1","Solver.Wy_1",cp)
 connect("tester.ydot_1","Solver.ydot_1",cp)
+connect("tester.ydot_max_1","Solver.ydot_max_1",cp)
+connect("tester.inequalities_1","Solver.inequalities_1",cp)
 # start tester
 tester.start

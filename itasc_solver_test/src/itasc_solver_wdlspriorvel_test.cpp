@@ -17,6 +17,9 @@ namespace
   }
 }
 
+// It is possible to define the port in the configureHook method.
+//  BUT it may now become impossible to see them.
+// The properties have to be defined before calling configure hook.
 namespace iTaSC {
 using namespace RTT;
 using namespace KDL;
@@ -41,9 +44,15 @@ A_1_kdl(Jacobian(7))
     //this->properties()->addProperty("Wy_1", Wy_1);
     this->properties()->addProperty("ydot_1", ydot_1);
 
+    this->ports()->addPort("ydot_max_1", ydot_max_1_port).doc("ydot_max");
+    this->properties()->addProperty("ydot_max_1", ydot_max_1);
+
     //
     this->ports()->addPort("qdot_expected",qdot_expected_port).doc("expected qdot");
     this->properties()->addProperty("qdot_expected", qdot_expected);
+
+    this->ports()->addPort("inequalities_1", inequalities_1_port).doc("inequalities indexes");
+    this->properties()->addProperty("inequalities_1", inequalities_1);
 
     //this->properties()->addProperty("Wq", Wq);
 
@@ -52,12 +61,16 @@ A_1_kdl(Jacobian(7))
     Wy_1.resize(nc, nc);
     Wq.resize(nq, nq);
     ydot_1.resize(nc);
+    ydot_max_1.resize(0);
+
+
     qdot.resize(nq);
     qdot_expected.resize(nq);
+    inequalities_1.resize(0);
 
     Wy_1.setIdentity();
     Wq.setIdentity();
-  std::cout << "Itasc_solver_wdlspriorvel_test constructed !" <<std::endl;
+    std::cout << "Itasc_solver_wdlspriorvel_test constructed !" <<std::endl;
 }
 
 bool Itasc_solver_wdlspriorvel_test::configureHook(){
@@ -94,7 +107,19 @@ void Itasc_solver_wdlspriorvel_test::updateHook(){
     A_1_port.write(A_1);
     Wy_1_port.write(Wy_1);
     ydot_1_port.write(ydot_1);
+    ydot_max_1_port.write(ydot_max_1);
+
+    //assertion: we only use inequalities if the solver can handle it
+
+    //TODO: the solver doesn't have inequalityProvisions, but there are inequalities present
+    //TaskContext* solver_ptr = getPeer("Solver");
+    //if((!solver_ptr->inequalityProvisions) && inequalities_1.size() != 0)
+    //  log(Error) << "[[TestSolver] error: The problem has inequalities, but solver can't handle inequalities" << endlog();
+    //else
+      inequalities_1_port.write(inequalities_1);
+
     Wq_port.write(Wq);
+
     //call solve()
     solve();
     //read from port
