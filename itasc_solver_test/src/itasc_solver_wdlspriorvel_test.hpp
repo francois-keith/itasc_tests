@@ -27,17 +27,10 @@ class Itasc_solver_wdlspriorvel_test : public RTT::TaskContext{
   private:
     unsigned int nq, nc;
     unsigned int priorityNo;
-    std::vector<int> nc_priorities;
+
+    // ...
     RTT::OutputPort<std::vector<int> > nc_priorities_port;
-
-    // data sent to the solver.
-    RTT::OutputPort<Eigen::MatrixXd> A_1_port;
-    RTT::OutputPort<Eigen::MatrixXd> Wy_1_port;
-    RTT::OutputPort<Eigen::VectorXd> ydot_1_port;
-    RTT::OutputPort<Eigen::VectorXd> ydot_max_1_port;
-    RTT::OutputPort<Eigen::VectorXd> inequalities_1_port;
-
-    RTT::OutputPort<Eigen::MatrixXd> Wq_port;
+    std::vector<int> nc_priorities;
 
     // incoming result from solver.
     RTT::InputPort<Eigen::VectorXd> qdot_port;
@@ -45,15 +38,40 @@ class Itasc_solver_wdlspriorvel_test : public RTT::TaskContext{
     // data get from the config file.
     RTT::OutputPort<Eigen::VectorXd> qdot_expected_port;
 
-    KDL::Jacobian A_1_kdl;
-    Eigen::MatrixXd A_1, Wy_1, Wq;
-    Eigen::VectorXd ydot_1;
-    Eigen::VectorXd ydot_max_1;
-    Eigen::VectorXd inequalities_1;
-
+    // Solution computed by the solver.
     Eigen::VectorXd qdot;
+
+    // Solution expected.
     Eigen::VectorXd qdot_expected;
     RTT::OperationCaller<void(void)> solve;
+
+    // Joint weigths
+    RTT::OutputPort<Eigen::MatrixXd> Wq_port;
+    Eigen::MatrixXd Wq;
+
+    struct Priority
+    {
+      Priority();
+
+      // data sent to the solver.
+      RTT::OutputPort<Eigen::MatrixXd> A_port;
+      RTT::OutputPort<Eigen::MatrixXd> Wy_port;
+      RTT::OutputPort<Eigen::VectorXd> ydot_port;
+      RTT::OutputPort<Eigen::VectorXd> ydot_max_port;
+
+      KDL::Jacobian   A_kdl;
+      Eigen::MatrixXd A;
+      Eigen::MatrixXd Wy;
+      Eigen::VectorXd ydot;
+      Eigen::VectorXd ydot_max;
+
+      // TODO it would be better to have a VectorXi, but the marshalling does not
+      //  handle that ...
+      RTT::OutputPort<Eigen::VectorXd> inequalities_port;
+      Eigen::VectorXd inequalities;
+    };
+
+    std::vector<Priority*> priorities;
 };
 }
 #endif

@@ -27,60 +27,90 @@ using namespace KDL;
 Itasc_solver_wdlspriorvel_test::Itasc_solver_wdlspriorvel_test(std::string const& name) : TaskContext(name),
 nq(7),
 priorityNo(1),
-nc_priorities(std::vector<int>(1,6)),
-A_1_kdl(Jacobian(7))
+nc_priorities(std::vector<int>(1,6))
 {
-    this->ports()->addPort("Wq",Wq_port).doc("weights on robot joints");
     this->ports()->addPort("qdot",qdot_port).doc("desired robot joint            velocities");
     this->addPort("nc_priorities",nc_priorities_port).doc("Port with vector of       number of constraints per priority.");
-    this->ports()->addPort("A_1", A_1_port).doc("general jacobian");
-    this->ports()->addPort("ydot_1", ydot_1_port).doc("ydot");
-    this->ports()->addPort("Wy_1", Wy_1_port).doc("Wy");
+
 
     this->properties()->addProperty("nq", nq);
     this->properties()->addProperty("priorityNo", priorityNo);
     this->properties()->addProperty("nc_priorities", nc_priorities);
-    this->properties()->addProperty("A_1", A_1_kdl);
-    //this->properties()->addProperty("Wy_1", Wy_1);
-    this->properties()->addProperty("ydot_1", ydot_1);
-
-    this->ports()->addPort("ydot_max_1", ydot_max_1_port).doc("ydot_max");
-    this->properties()->addProperty("ydot_max_1", ydot_max_1);
 
     //
     this->ports()->addPort("qdot_expected",qdot_expected_port).doc("expected qdot");
     this->properties()->addProperty("qdot_expected", qdot_expected);
 
-    this->ports()->addPort("inequalities_1", inequalities_1_port).doc("inequalities indexes");
-    this->properties()->addProperty("inequalities_1", inequalities_1);
-
+    //
+    this->ports()->addPort("Wq", Wq_port).doc("weights on robot joints");
+    Wq = Eigen::MatrixXd::Identity(nq, nq);
     //this->properties()->addProperty("Wq", Wq);
 
+    //
     nc = nc_priorities[0];
-    A_1.resize(nc, nq);
-    Wy_1.resize(nc, nc);
-    Wq.resize(nq, nq);
-    ydot_1.resize(nc);
-    ydot_max_1.resize(0);
-
 
     qdot.resize(nq);
     qdot_expected.resize(nq);
-    inequalities_1.resize(0);
 
-    Wy_1.setIdentity();
-    Wq.setIdentity();
+    std::stringstream ssName;
+    std::string pname;
+    priorities.resize(priorityNo);
+    for (unsigned int i=0;i<priorityNo;i++)
+    {
+        priorities[i] = new Priority();
+
+        ssName.clear();
+        ssName << "A_" << i+1;
+        ssName >> pname;
+        this->ports()->addPort(pname, priorities[i]->A_port).doc("general jacobian");
+        this->properties()->addProperty(pname, priorities[i]->A_kdl);
+
+        ssName.clear();
+        ssName << "Wy_" << i+1;
+        ssName >> pname;
+        this->ports()->addPort(pname, priorities[i]->Wy_port).doc("Wy");
+        //this->properties()->addProperty("Wy_1", Wy_1);
+
+        ssName.clear();
+        ssName << "ydot_" << i+1;
+        ssName >> pname;
+        this->ports()->addPort(pname, priorities[i]->ydot_port).doc("ydot");
+        this->properties()->addProperty(pname, priorities[i]->ydot);
+
+        ssName.clear();
+        ssName << "ydot_max_" << i+1;
+        ssName >> pname;
+        this->ports()->addPort(pname, priorities[i]->ydot_max_port).doc("ydot_max");
+        this->properties()->addProperty(pname, priorities[i]->ydot_max);
+
+        ssName.clear();
+        ssName << "inequalities_" << i+1;
+        ssName >> pname;
+        this->ports()->addPort(pname, priorities[i]->inequalities_port).doc("inequalities indexes");
+        this->properties()->addProperty(pname, priorities[i]->inequalities);
+
+        priorities[i]->A.resize(nc, nq);
+        priorities[i]->Wy.resize(nc, nc);
+        priorities[i]->ydot.resize(nc);
+        priorities[i]->ydot_max.resize(0);
+        priorities[i]->inequalities.resize(0);
+        priorities[i]->Wy.setIdentity();
+    }
     std::cout << "Itasc_solver_wdlspriorvel_test constructed !" <<std::endl;
 }
 
 bool Itasc_solver_wdlspriorvel_test::configureHook(){
     nc = nc_priorities[0];
-    Wy_1.resize(nc, nc);
-    Wq.resize(nq, nq);
-    Wy_1.setIdentity();
-    Wq.setIdentity();
 
-    A_1=A_1_kdl.data;
+    Wq = Eigen::MatrixXd::Identity(nq, nq);
+    for (unsigned int i=0;i<priorityNo;i++)
+    {
+        priorities[i]->Wy.resize(nc, nc);
+        priorities[i]->Wy.setIdentity();
+
+        priorities[i]->A = priorities[i]->A_kdl.data;
+    }
+
     TaskContext* solver_ptr = getPeer("Solver");
   //set priority number and nq
     Attribute<unsigned int> nq_att = solver_ptr->provides()->getAttribute("nq");
@@ -102,12 +132,17 @@ bool Itasc_solver_wdlspriorvel_test::startHook(){
   return true;
 }
 
-void Itasc_solver_wdlspriorvel_test::updateHook(){
+void Itasc_solver_wdlspriorvel_test::updateHook()
+{
     //put dummy data on port
-    A_1_port.write(A_1);
-    Wy_1_port.write(Wy_1);
-    ydot_1_port.write(ydot_1);
-    ydot_max_1_port.write(ydot_max_1);
+    Wq_port.write(Wq);
+
+    for (unsigned int i=0;i<priorityNo;i++)
+    {
+        priorities[i]->A_port.write(priorities[i]->A);
+        priorities[i]->Wy_port.write(priorities[i]->Wy);
+        priorities[i]->ydot_port.write(priorities[i]->ydot);
+        priorities[i]->ydot_max_port.write(priorities[i]->ydot_max);
 
     //assertion: we only use inequalities if the solver can handle it
 
@@ -116,9 +151,8 @@ void Itasc_solver_wdlspriorvel_test::updateHook(){
     //if((!solver_ptr->inequalityProvisions) && inequalities_1.size() != 0)
     //  log(Error) << "[[TestSolver] error: The problem has inequalities, but solver can't handle inequalities" << endlog();
     //else
-      inequalities_1_port.write(inequalities_1);
-
-    Wq_port.write(Wq);
+        priorities[i]->inequalities_port.write(priorities[i]->inequalities);
+    }
 
     //call solve()
     solve();
@@ -153,6 +187,10 @@ void Itasc_solver_wdlspriorvel_test::cleanupHook() {
   std::cout << "Itasc_solver_wdlspriorvel_test cleaning up !" <<std::endl;
 }
 
+Itasc_solver_wdlspriorvel_test::Priority::Priority()
+: A_kdl(Jacobian(7))
+{
+}
 }
 /*
  * Using this macro, only one component may live
