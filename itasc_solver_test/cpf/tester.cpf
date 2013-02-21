@@ -59,7 +59,7 @@
      <simple name="6" type="double"><description>6th element of vector</description><value>0.9</value></simple>
   </struct>
   <struct name="qdot_expected" type="eigen_vector">
-     <simple name="1" type="double"><description>1th element of vector</description><value>10.529707657525</value></simple>
+     <simple name="1" type="double"><description>1th element of vector</description><value>0.529707657525</value></simple>
      <simple name="2" type="double"><description>2th element of vector</description><value>0.36045835674</value></simple>
      <simple name="3" type="double"><description>3th element of vector</description><value>-0.860645172944</value></simple>
      <simple name="4" type="double"><description>4th element of vector</description><value>0.298280414138</value></simple>
