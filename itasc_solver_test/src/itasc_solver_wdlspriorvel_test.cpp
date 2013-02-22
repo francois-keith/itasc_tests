@@ -4,7 +4,7 @@
 
 namespace
 {
-  bool compare (const Eigen::VectorXd & v1, const Eigen::VectorXd & v2, bool tol = 1e-9)
+  bool compare (const Eigen::VectorXd & v1, const Eigen::VectorXd & v2, double tol)
   {
     if (v1.size() != v2.size())
       return false;
