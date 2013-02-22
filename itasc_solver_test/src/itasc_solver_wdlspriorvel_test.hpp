@@ -67,8 +67,8 @@ class Itasc_solver_wdlspriorvel_test : public RTT::TaskContext{
 
       // TODO it would be better to have a VectorXi, but the marshalling does not
       //  handle that ...
-      RTT::OutputPort<Eigen::VectorXd> inequalities_port;
-      Eigen::VectorXd inequalities;
+      RTT::OutputPort< std::vector<unsigned> > inequalities_port;
+      std::vector<unsigned> inequalities;
     };
 
     std::vector<Priority*> priorities;
