@@ -24,10 +24,12 @@ namespace iTaSC {
 using namespace RTT;
 using namespace KDL;
 
-Itasc_solver_wdlspriorvel_test::Itasc_solver_wdlspriorvel_test(std::string const& name) : TaskContext(name),
+Itasc_solver_wdlspriorvel_test::Itasc_solver_wdlspriorvel_test(std::string const& name)
+: TaskContext(name),
 nq(7),
 priorityNo(2),
-nc_priorities()
+nc_priorities(),
+testDone(false)
 {
     nc_priorities.resize(priorityNo,0);
 //    nc_priorities[0] = 2;
@@ -141,6 +143,9 @@ bool Itasc_solver_wdlspriorvel_test::startHook(){
 
 void Itasc_solver_wdlspriorvel_test::updateHook()
 {
+    if(testDone == true)
+      return;
+
     //put dummy data on port
     Wq_port.write(Wq);
 
@@ -171,14 +176,14 @@ void Itasc_solver_wdlspriorvel_test::updateHook()
         // Validate the received solution.
         if( (compare(qdot, qdot_expected, 1e-9)) )
         {
-          std::cout << "Success ! " << std::endl;
+          std::cout << " ** Test Success ! **" << std::endl;
           // Todo: interrupt properly
           //  ie not std::exit(0);
         }
         else
         {
           std::cerr.precision(12);
-          std::cerr << "Test failed ! " << std::endl;
+          std::cerr << " ** Test Failure ! **" << std::endl;
           std::cerr << " qdot " << qdot.transpose() << std::endl;
           std::cerr << " qdot_expected " << qdot_expected.transpose() << std::endl;
           std::cerr << " diff = " << (qdot_expected - qdot).transpose() << std::endl;
@@ -189,6 +194,7 @@ void Itasc_solver_wdlspriorvel_test::updateHook()
 
 void Itasc_solver_wdlspriorvel_test::stopHook() {
   std::cout << "Itasc_solver_wdlspriorvel_test executes stopping !" <<std::endl;
+  testDone = false;
 }
 
 void Itasc_solver_wdlspriorvel_test::cleanupHook() {

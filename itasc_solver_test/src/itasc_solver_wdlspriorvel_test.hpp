@@ -72,6 +72,10 @@ class Itasc_solver_wdlspriorvel_test : public RTT::TaskContext{
     };
 
     std::vector<Priority*> priorities;
+
+    // The test is run once, and can be rerun if the hook is stopped and restarted.
+    // avoid being verbose.
+    bool testDone;
 };
 }
 #endif
