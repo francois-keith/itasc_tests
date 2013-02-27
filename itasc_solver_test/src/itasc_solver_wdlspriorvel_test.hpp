@@ -48,7 +48,7 @@ class Itasc_solver_wdlspriorvel_test : public RTT::TaskContext{
 
     struct Priority
     {
-      Priority();
+      Priority(unsigned nc, unsigned nq);
 
       // data sent to the solver.
       RTT::OutputPort<Eigen::MatrixXd> A_port;

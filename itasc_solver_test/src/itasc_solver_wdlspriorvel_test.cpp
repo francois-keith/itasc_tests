@@ -63,8 +63,8 @@ testDone(false)
     // TODO Priority:creator
     for (unsigned int i=0;i<priorityNo;i++)
     {
-        priorities[i] = new Priority();
         int nc = nc_priorities[i];
+        priorities[i] = new Priority(nc, nq);
 
         ssName.clear();
         ssName << "A_" << i+1;
@@ -95,12 +95,6 @@ testDone(false)
         ssName >> pname;
         this->ports()->addPort(pname, priorities[i]->inequalities_port).doc("inequalities indexes");
         this->properties()->addProperty(pname, priorities[i]->inequalities);
-
-        priorities[i]->A.resize(nc, nq);
-        priorities[i]->Wy = Eigen::MatrixXd::Identity(nc, nc);
-        priorities[i]->ydot.resize(nc);
-        priorities[i]->ydot_max.resize(0);
-        priorities[i]->inequalities.resize(0);
     }
 //    std::cout << "Itasc_solver_wdlspriorvel_test constructed !" <<std::endl;
 }
@@ -226,10 +220,15 @@ void Itasc_solver_wdlspriorvel_test::cleanupHook() {
   std::cout << "Itasc_solver_wdlspriorvel_test cleaning up !" <<std::endl;
 }
 
-Itasc_solver_wdlspriorvel_test::Priority::Priority()
-: A_vec()
-{
-}
+Itasc_solver_wdlspriorvel_test::Priority::Priority(unsigned nc, unsigned nq)
+: A_vec(nc * nq)
+, A (Eigen::MatrixXd::Zero(nc, nq))
+, Wy(Eigen::MatrixXd::Identity(nc, nc))
+, ydot(nc)
+, ydot_max()
+, inequalities(0)
+{}
+
 }
 /*
  * Using this macro, only one component may live
