@@ -22,7 +22,6 @@ namespace
 // The properties have to be defined before calling configure hook.
 namespace iTaSC {
 using namespace RTT;
-using namespace KDL;
 
 Itasc_solver_wdlspriorvel_test::Itasc_solver_wdlspriorvel_test(std::string const& name)
 : TaskContext(name),
@@ -71,7 +70,7 @@ testDone(false)
         ssName << "A_" << i+1;
         ssName >> pname;
         this->ports()->addPort(pname, priorities[i]->A_port).doc("general jacobian");
-        this->properties()->addProperty(pname, priorities[i]->A_kdl);
+        this->properties()->addProperty(pname, priorities[i]->A_vec);
 
         ssName.clear();
         ssName << "Wy_" << i+1;
@@ -116,7 +115,9 @@ bool Itasc_solver_wdlspriorvel_test::configureHook()
     {
         int nc = nc_priorities[i];
         priorities[i]->Wy = Eigen::MatrixXd::Identity(nc, nc);
-        priorities[i]->A = priorities[i]->A_kdl.data;
+        priorities[i]->A.resize(nc, nq);
+        for(unsigned xi=0; xi <nc; ++xi)
+            priorities[i]->A.block(xi, 0, 1, nq) = priorities[i]->A_vec.transpose().block(0, xi*nq, 1, nq);
     }
 
     TaskContext* solver_ptr = getPeer("Solver");
@@ -202,7 +203,7 @@ void Itasc_solver_wdlspriorvel_test::cleanupHook() {
 }
 
 Itasc_solver_wdlspriorvel_test::Priority::Priority()
-: A_kdl(Jacobian(7))
+: A_vec()
 {
 }
 }

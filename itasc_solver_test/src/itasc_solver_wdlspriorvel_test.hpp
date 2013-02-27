@@ -7,9 +7,6 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <kdl/frames.hpp>
-#include <kdl/jntarray.hpp>
-#include <kdl/jacobian.hpp>
 
 //TODO dynamically set the size of de and dq.
 //TODO create several tests
@@ -59,7 +56,7 @@ class Itasc_solver_wdlspriorvel_test : public RTT::TaskContext{
       RTT::OutputPort<Eigen::VectorXd> ydot_port;
       RTT::OutputPort<Eigen::VectorXd> ydot_max_port;
 
-      KDL::Jacobian   A_kdl;
+      Eigen::VectorXd A_vec;
       Eigen::MatrixXd A;
       Eigen::MatrixXd Wy;
       Eigen::VectorXd ydot;

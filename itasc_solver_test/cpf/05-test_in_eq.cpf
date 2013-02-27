@@ -2,19 +2,34 @@
 <!DOCTYPE properties SYSTEM "cpf.dtd">
 <properties>
   <simple name="nq" type="ulong"><value>7</value></simple>
-  <simple name="priorityNo" type="ulong"><value>1</value></simple>
+  <simple name="priorityNo" type="ulong"><value>2</value></simple>
+
   <struct name="nc_priorities" type="int32[]">
-     <simple name="Element0" type="long"><description>Sequence Element</description><value>6</value></simple>
+     <simple name="Element0" type="long"><description>Sequence Element</description><value>1</value></simple>
+     <simple name="Element1" type="long"><description>Sequence Element</description><value>6</value></simple>
   </struct>
   <struct name="inequalities_1" type="uint32[]">
-     <simple name="Element0" type="long"> <value>3</value> </simple>
-     <simple name="Element1" type="long"> <value>0</value> </simple>
-     <simple name="Element2" type="long"> <value>0</value> </simple>
-     <simple name="Element3" type="long"> <value>0</value> </simple>
-     <simple name="Element4" type="long"> <value>3</value> </simple>
-     <simple name="Element5" type="long"> <value>3</value> </simple>
+     <simple name="Element0" type="long"> <value>2</value> </simple>
   </struct>
   <struct name="A_1" type="eigen_vector">
+     <simple name="1" type="double"><description>Jacobian element</description><value>1</value></simple>
+     <simple name="2" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="3" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="4" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="5" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="6" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="7" type="double"><description>Jacobian element</description><value>0</value></simple>
+  </struct>
+  <struct name="ydot_1" type="eigen_vector">
+     <simple name="1" type="double"><description>1th element of vector</description><value>-100</value></simple>
+  </struct>
+  <struct name="ydot_max_1" type="eigen_vector">
+     <simple name="1" type="double"><description>1th element of vector</description><value>0.5</value></simple>
+  </struct>
+
+
+
+  <struct name="A_2" type="eigen_vector">
      <simple name="1" type="double"><description>Jacobian element</description><value>1</value></simple>
      <simple name="2" type="double"><description>Jacobian element</description><value>1.3</value></simple>
      <simple name="3" type="double"><description>Jacobian element</description><value>3.9</value></simple>
@@ -58,30 +73,23 @@
      <simple name="41" type="double"><description>Jacobian element</description><value>9.2</value></simple>
      <simple name="42" type="double"><description>Jacobian element</description><value>1.0</value></simple>
   </struct>
-  <struct name="ydot_1" type="eigen_vector">
-     <simple name="1" type="double"><description>1th element of vector</description><value>0</value></simple>
+  <struct name="ydot_2" type="eigen_vector">
+     <simple name="1" type="double"><description>1th element of vector</description><value>2</value></simple>
      <simple name="2" type="double"><description>2th element of vector</description><value>1.3</value></simple>
      <simple name="3" type="double"><description>3th element of vector</description><value>2.1</value></simple>
      <simple name="4" type="double"><description>4th element of vector</description><value>0.2</value></simple>
-     <simple name="5" type="double"><description>5th element of vector</description><value>-5</value></simple>
-     <simple name="6" type="double"><description>6th element of vector</description><value>-2</value></simple>
-  </struct>
-  <struct name="ydot_max_1" type="eigen_vector">
-     <simple name="1" type="double"><description>1th element of vector</description><value>10</value></simple>
-     <simple name="2" type="double"><description>2th element of vector</description><value>9001</value></simple>
-     <simple name="3" type="double"><description>3th element of vector</description><value>9001</value></simple>
-     <simple name="4" type="double"><description>4th element of vector</description><value>9001</value></simple>
-     <simple name="5" type="double"><description>5th element of vector</description><value>5</value></simple>
-     <simple name="6" type="double"><description>6th element of vector</description><value>2</value></simple>
+     <simple name="5" type="double"><description>5th element of vector</description><value>2.3</value></simple>
+     <simple name="6" type="double"><description>6th element of vector</description><value>0.9</value></simple>
   </struct>
 
+
   <struct name="qdot_expected" type="eigen_vector">
-     <simple name="1" type="double"><description>1th element of vector</description><value> 1.31629772772</value></simple>
-     <simple name="2" type="double"><description>2th element of vector</description><value> 0.439739501744</value></simple>
-     <simple name="3" type="double"><description>3th element of vector</description><value>-2.33777808512  </value></simple>
-     <simple name="4" type="double"><description>4th element of vector</description><value>-0.782331333695 </value></simple>
-     <simple name="5" type="double"><description>5th element of vector</description><value>-3.43142060455</value></simple>
-     <simple name="6" type="double"><description>6th element of vector</description><value> -0.311714092106 </value></simple>
-     <simple name="7" type="double"><description>7th element of vector</description><value> 1.40635302441</value></simple>
+     <simple name="1" type="double"><description>1th element of vector</description><value> 2</value></simple>
+     <simple name="2" type="double"><description>2th element of vector</description><value>0.237781995468</value></simple>
+     <simple name="3" type="double"><description>3th element of vector</description><value>1.42500913707</value></simple>
+     <simple name="4" type="double"><description>4th element of vector</description><value>1.12909026746</value></simple>
+     <simple name="5" type="double"><description>5th element of vector</description><value>-2.7059333957</value></simple>
+     <simple name="6" type="double"><description>6th element of vector</description><value>-0.157624040907</value></simple>
+     <simple name="7" type="double"><description>7th element of vector</description><value>-1.42105206345</value></simple>
   </struct>
 </properties>

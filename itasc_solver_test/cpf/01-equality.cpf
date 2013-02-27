@@ -6,49 +6,49 @@
   <struct name="nc_priorities" type="int32[]">
      <simple name="Element0" type="long"><description>Sequence Element</description><value>6</value></simple>
   </struct>
-  <struct name="A_1" type="KDL.Jacobian">
-     <simple name="Element (0,0)" type="double"><description>Jacobian element</description><value>1</value></simple>
-     <simple name="Element (0,1)" type="double"><description>Jacobian element</description><value>1.3</value></simple>
-     <simple name="Element (0,2)" type="double"><description>Jacobian element</description><value>3.9</value></simple>
-     <simple name="Element (0,3)" type="double"><description>Jacobian element</description><value>6.9</value></simple>
-     <simple name="Element (0,4)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (0,5)" type="double"><description>Jacobian element</description><value>1.9</value></simple>
-     <simple name="Element (0,6)" type="double"><description>Jacobian element</description><value>9.4</value></simple>
-     <simple name="Element (1,0)" type="double"><description>Jacobian element</description><value>6.9</value></simple>
-     <simple name="Element (1,1)" type="double"><description>Jacobian element</description><value>2.2</value></simple>
-     <simple name="Element (1,2)" type="double"><description>Jacobian element</description><value>1.7</value></simple>
-     <simple name="Element (1,3)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (1,4)" type="double"><description>Jacobian element</description><value>3.1</value></simple>
-     <simple name="Element (1,5)" type="double"><description>Jacobian element</description><value>2.4</value></simple>
-     <simple name="Element (1,6)" type="double"><description>Jacobian element</description><value>4.7</value></simple>
-     <simple name="Element (2,0)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (2,1)" type="double"><description>Jacobian element</description><value>8.8</value></simple>
-     <simple name="Element (2,2)" type="double"><description>Jacobian element</description><value>1.9</value></simple>
-     <simple name="Element (2,3)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (2,4)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (2,5)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (2,6)" type="double"><description>Jacobian element</description><value>1.9</value></simple>
-     <simple name="Element (3,0)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (3,1)" type="double"><description>Jacobian element</description><value>3.2</value></simple>
-     <simple name="Element (3,2)" type="double"><description>Jacobian element</description><value>1.9</value></simple>
-     <simple name="Element (3,3)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (3,4)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (3,5)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (3,6)" type="double"><description>Jacobian element</description><value>2.3</value></simple>
-     <simple name="Element (4,0)" type="double"><description>Jacobian element</description><value>2.2</value></simple>
-     <simple name="Element (4,1)" type="double"><description>Jacobian element</description><value>1.5</value></simple>
-     <simple name="Element (4,2)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (4,3)" type="double"><description>Jacobian element</description><value>5.5</value></simple>
-     <simple name="Element (4,4)" type="double"><description>Jacobian element</description><value>2.1</value></simple>
-     <simple name="Element (4,5)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (4,6)" type="double"><description>Jacobian element</description><value>2.1</value></simple>
-     <simple name="Element (5,0)" type="double"><description>Jacobian element</description><value>5.2</value></simple>
-     <simple name="Element (5,1)" type="double"><description>Jacobian element</description><value>7.4</value></simple>
-     <simple name="Element (5,2)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (5,3)" type="double"><description>Jacobian element</description><value>0</value></simple>
-     <simple name="Element (5,4)" type="double"><description>Jacobian element</description><value>3.1</value></simple>
-     <simple name="Element (5,5)" type="double"><description>Jacobian element</description><value>9.2</value></simple>
-     <simple name="Element (5,6)" type="double"><description>Jacobian element</description><value>1.0</value></simple>
+  <struct name="A_1" type="eigen_vector">
+     <simple name="1" type="double"><description>Jacobian element</description><value>1</value></simple>
+     <simple name="2" type="double"><description>Jacobian element</description><value>1.3</value></simple>
+     <simple name="3" type="double"><description>Jacobian element</description><value>3.9</value></simple>
+     <simple name="4" type="double"><description>Jacobian element</description><value>6.9</value></simple>
+     <simple name="5" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="6" type="double"><description>Jacobian element</description><value>1.9</value></simple>
+     <simple name="7" type="double"><description>Jacobian element</description><value>9.4</value></simple>
+     <simple name="8" type="double"><description>Jacobian element</description><value>6.9</value></simple>
+     <simple name="9" type="double"><description>Jacobian element</description><value>2.2</value></simple>
+     <simple name="10" type="double"><description>Jacobian element</description><value>1.7</value></simple>
+     <simple name="11" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="12" type="double"><description>Jacobian element</description><value>3.1</value></simple>
+     <simple name="13" type="double"><description>Jacobian element</description><value>2.4</value></simple>
+     <simple name="14" type="double"><description>Jacobian element</description><value>4.7</value></simple>
+     <simple name="15" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="16" type="double"><description>Jacobian element</description><value>8.8</value></simple>
+     <simple name="17" type="double"><description>Jacobian element</description><value>1.9</value></simple>
+     <simple name="18" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="19" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="20" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="21" type="double"><description>Jacobian element</description><value>1.9</value></simple>
+     <simple name="22" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="23" type="double"><description>Jacobian element</description><value>3.2</value></simple>
+     <simple name="24" type="double"><description>Jacobian element</description><value>1.9</value></simple>
+     <simple name="25" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="26" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="27" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="28" type="double"><description>Jacobian element</description><value>2.3</value></simple>
+     <simple name="29" type="double"><description>Jacobian element</description><value>2.2</value></simple>
+     <simple name="30" type="double"><description>Jacobian element</description><value>1.5</value></simple>
+     <simple name="31" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="32" type="double"><description>Jacobian element</description><value>5.5</value></simple>
+     <simple name="33" type="double"><description>Jacobian element</description><value>2.1</value></simple>
+     <simple name="34" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="35" type="double"><description>Jacobian element</description><value>2.1</value></simple>
+     <simple name="36" type="double"><description>Jacobian element</description><value>5.2</value></simple>
+     <simple name="37" type="double"><description>Jacobian element</description><value>7.4</value></simple>
+     <simple name="38" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="39" type="double"><description>Jacobian element</description><value>0</value></simple>
+     <simple name="40" type="double"><description>Jacobian element</description><value>3.1</value></simple>
+     <simple name="41" type="double"><description>Jacobian element</description><value>9.2</value></simple>
+     <simple name="42" type="double"><description>Jacobian element</description><value>1.0</value></simple>
   </struct>
   <struct name="ydot_1" type="eigen_vector">
      <simple name="1" type="double"><description>1th element of vector</description><value>2</value></simple>
