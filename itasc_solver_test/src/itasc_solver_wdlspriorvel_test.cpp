@@ -188,8 +188,32 @@ void Itasc_solver_wdlspriorvel_test::updateHook()
           std::cerr << " qdot " << qdot.transpose() << std::endl;
           std::cerr << " qdot_expected " << qdot_expected.transpose() << std::endl;
           std::cerr << " diff = " << (qdot_expected - qdot).transpose() << std::endl;
-    //      std::exit(-1);
         }
+
+        // Simple manual checking
+        //std::cout << "qdot  [" << qdot.size() << "]   " << (qdot).transpose() << std::endl;
+
+        std::cout.precision(8);
+        for(unsigned i=0; i<priorityNo; ++i)
+        {
+            int nc = priorities[i]->ydot.size();
+            std::cout << "  Priority " << i << std::endl;
+            Eigen::VectorXd ydot_real = priorities[i]->A * qdot;
+            for (unsigned c=0; c < nc; ++c)
+            {
+                //equality
+                if (priorities[i]->inequalities.size()==0 || priorities[i]->inequalities[c] == 0)
+                    std::cout << priorities[i]->ydot[c] << "\t==\t" << ydot_real[c] << std::endl;
+                else if ( priorities[i]->inequalities[c] == 1)
+                    std::cout << priorities[i]->ydot[c] << "\t<=\t" << ydot_real[c] << "\t<=Inf" << std::endl;
+                else if ( priorities[i]->inequalities[c] == 2)
+                    std::cout << "-Inf\t<=\t" << ydot_real[c] << "\t<=\t" << priorities[i]->ydot_max[c] << std::endl;
+                else if ( priorities[i]->inequalities[c] == 3)
+                    std::cout << priorities[i]->ydot[c] << "\t<=\t" << ydot_real[c] << "\t<=\t" << priorities[i]->ydot_max[c] << std::endl;
+            }
+            std::cout << std::endl;
+        }
+        testDone = true;
     }
 }
 
