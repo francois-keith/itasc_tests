@@ -3,12 +3,8 @@
 <properties>
   <simple name="nq" type="ulong"><value>7</value></simple>
   <simple name="priorityNo" type="ulong"><value>1</value></simple>
-
   <struct name="nc_priorities" type="int32[]">
-     <simple name="Element0" type="long"><description>Sequence Element</description><value>1</value></simple>
-  </struct>
-  <struct name="inequalities_1" type="uint32[]">
-     <simple name="Element0" type="long"> <value>0</value> </simple>
+     <simple name="Element0" type="long"><description>Sequence Element</description><value>2</value></simple>
   </struct>
   <struct name="A_1" type="eigen_vector">
      <simple name="1" type="double"><description>1th element of vector</description><value>1</value></simple>
@@ -18,16 +14,26 @@
      <simple name="5" type="double"><description>5th element of vector</description><value>0</value></simple>
      <simple name="6" type="double"><description>6th element of vector</description><value>0</value></simple>
      <simple name="7" type="double"><description>7th element of vector</description><value>0</value></simple>
-  </struct>
-  <struct name="ydot_1" type="eigen_vector">
-     <simple name="1" type="double"><description>1th element of vector</description><value>2</value></simple>
-  </struct>
-  <struct name="ydot_max_1" type="eigen_vector">
-     <simple name="1" type="double"><description>1th element of vector</description><value>100</value></simple>
+
+     <simple name="8" type="double"><description>1th element of vector</description><value>1</value></simple>
+     <simple name="9" type="double"><description>2th element of vector</description><value>0</value></simple>
+     <simple name="10" type="double"><description>3th element of vector</description><value>0</value></simple>
+     <simple name="11" type="double"><description>4th element of vector</description><value>0</value></simple>
+     <simple name="12" type="double"><description>5th element of vector</description><value>0</value></simple>
+     <simple name="13" type="double"><description>6th element of vector</description><value>0</value></simple>
+     <simple name="14" type="double"><description>7th element of vector</description><value>0</value></simple>
   </struct>
 
+  <struct name="Wy_diag_1" type="eigen_vector">
+     <simple name="1" type="double"><description>1th element of vector</description><value>9</value></simple>
+     <simple name="2" type="double"><description>2th element of vector</description><value>1</value></simple>
+  </struct>
+  <struct name="ydot_1" type="eigen_vector">
+     <simple name="1" type="double"><description>1th element of vector</description><value>10</value></simple>
+     <simple name="2" type="double"><description>2th element of vector</description><value>-10</value></simple>
+  </struct>
   <struct name="qdot_expected" type="eigen_vector">
-     <simple name="1" type="double"><description>1th element of vector</description><value>2</value></simple>
+     <simple name="1" type="double"><description>1th element of vector</description><value>8</value></simple>
      <simple name="2" type="double"><description>2th element of vector</description><value>0</value></simple>
      <simple name="3" type="double"><description>3th element of vector</description><value>0</value></simple>
      <simple name="4" type="double"><description>4th element of vector</description><value>0</value></simple>
