@@ -102,7 +102,6 @@ testDone(false)
         this->ports()->addPort(pname, priorities[i]->Wy_diag_port).doc("Wy_diag");
         this->properties()->addProperty(pname, priorities[i]->Wy_diag);
     }
-//    std::cout << "Itasc_solver_wdlspriorvel_test constructed !" <<std::endl;
 }
 
 
@@ -133,8 +132,7 @@ bool Itasc_solver_wdlspriorvel_test::configureHook()
     //get solve method (but don't call it yet
     solve = solver_ptr->getOperation("solve"); 
 
-//  std::cout << "Itasc_solver_wdlspriorvel_test configured !" <<std::endl;
-  return true;
+    return true;
 }
 
 bool Itasc_solver_wdlspriorvel_test::startHook(){
