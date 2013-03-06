@@ -31,8 +31,6 @@ nc_priorities(),
 testDone(false)
 {
     nc_priorities.resize(priorityNo,0);
-//    nc_priorities[0] = 2;
-//    nc_priorities[1] = 6;
 
     this->ports()->addPort("qdot",qdot_port).doc("desired robot joint            velocities");
     this->addPort("nc_priorities",nc_priorities_port).doc("Port with vector of       number of constraints per priority.");
@@ -50,7 +48,10 @@ testDone(false)
     //
     this->ports()->addPort("Wq", Wq_port).doc("weights on robot joints");
     Wq = Eigen::MatrixXd::Identity(nq, nq);
-    //this->properties()->addProperty("Wq", Wq);
+
+    Wq_diag = Eigen::VectorXd::Ones(nq);
+    this->ports()->addPort("Wq_diag", Wq_diag_port).doc("diagonal weights on robot joints");
+    this->properties()->addProperty("Wq_diag", Wq_diag);
 
     //
     qdot.resize(nq);
@@ -76,7 +77,6 @@ testDone(false)
         ssName << "Wy_" << i+1;
         ssName >> pname;
         this->ports()->addPort(pname, priorities[i]->Wy_port).doc("Wy");
-        //this->properties()->addProperty("Wy_1", Wy_1);
 
         ssName.clear();
         ssName << "ydot_" << i+1;
@@ -95,6 +95,12 @@ testDone(false)
         ssName >> pname;
         this->ports()->addPort(pname, priorities[i]->inequalities_port).doc("inequalities indexes");
         this->properties()->addProperty(pname, priorities[i]->inequalities);
+
+        ssName.clear();
+        ssName << "Wy_diag_" << i+1;
+        ssName >> pname;
+        this->ports()->addPort(pname, priorities[i]->Wy_diag_port).doc("Wy_diag");
+        this->properties()->addProperty(pname, priorities[i]->Wy_diag);
     }
 //    std::cout << "Itasc_solver_wdlspriorvel_test constructed !" <<std::endl;
 }
@@ -108,14 +114,14 @@ bool Itasc_solver_wdlspriorvel_test::configureHook()
     for (unsigned int i=0;i<priorityNo;i++)
     {
         int nc = nc_priorities[i];
-        priorities[i]->Wy = Eigen::MatrixXd::Identity(nc, nc);
         priorities[i]->A.resize(nc, nq);
-        for(unsigned xi=0; xi <nc; ++xi)
+        for(int xi=0; xi <nc; ++xi)
             priorities[i]->A.block(xi, 0, 1, nq) = priorities[i]->A_vec.transpose().block(0, xi*nq, 1, nq);
     }
 
     TaskContext* solver_ptr = getPeer("Solver");
-  //set priority number and nq
+
+    //set priority number and nq
     Attribute<unsigned int> nq_att = solver_ptr->provides()->getAttribute("nq");
     Attribute<unsigned int> priorityNo_att = solver_ptr->provides()->getAttribute("priorityNo");
     nq_att.set(nq);
@@ -142,15 +148,26 @@ void Itasc_solver_wdlspriorvel_test::updateHook()
       return;
 
     //put dummy data on port
-    Wq_port.write(Wq);
+    if(Wq_diag.size() > 0)
+    {
+        // std::cout << "writing Wq_diag  " << Wq_diag.transpose() << std::endl;
+        Wq_diag_port.write(Wq_diag);
+    }
+    else
+    {
+        // std::cout << "writing Wq       \n" << Wq << std::endl;
+        Wq_port.write(Wq);
+    }
 
     // TODO Priority:updateHook
     for (unsigned int i=0;i<priorityNo;i++)
     {
         priorities[i]->A_port.write(priorities[i]->A);
-        priorities[i]->Wy_port.write(priorities[i]->Wy);
         priorities[i]->ydot_port.write(priorities[i]->ydot);
         priorities[i]->ydot_max_port.write(priorities[i]->ydot_max);
+        priorities[i]->inequalities_port.write(priorities[i]->inequalities);
+        if(priorities[i]->Wy_diag.size() > 0)
+            priorities[i]->Wy_diag_port.write(priorities[i]->Wy_diag);
 
     //assertion: we only use inequalities if the solver can handle it
 
@@ -159,7 +176,6 @@ void Itasc_solver_wdlspriorvel_test::updateHook()
     //if((!solver_ptr->inequalityProvisions) && inequalities_1.size() != 0)
     //  log(Error) << "[[TestSolver] error: The problem has inequalities, but solver can't handle inequalities" << endlog();
     //else
-        priorities[i]->inequalities_port.write(priorities[i]->inequalities);
     }
 
     //call solve()
@@ -227,7 +243,9 @@ Itasc_solver_wdlspriorvel_test::Priority::Priority(unsigned nc, unsigned nq)
 , ydot(nc)
 , ydot_max()
 , inequalities(0)
-{}
+, Wy_diag(Eigen::VectorXd::Ones(nc))
+{
+}
 
 }
 /*

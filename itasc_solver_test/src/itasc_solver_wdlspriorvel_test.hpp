@@ -46,6 +46,11 @@ class Itasc_solver_wdlspriorvel_test : public RTT::TaskContext{
     RTT::OutputPort<Eigen::MatrixXd> Wq_port;
     Eigen::MatrixXd Wq;
 
+    // Joint weigths (diagonal version)
+    // TODO temporary. Remove asap by using eigen_matrix in the cpf file.
+    RTT::OutputPort<Eigen::VectorXd> Wq_diag_port;
+    Eigen::VectorXd Wq_diag;
+
     struct Priority
     {
       Priority(unsigned nc, unsigned nq);
@@ -66,6 +71,11 @@ class Itasc_solver_wdlspriorvel_test : public RTT::TaskContext{
       //  handle that ...
       RTT::OutputPort< std::vector<unsigned> > inequalities_port;
       std::vector<unsigned> inequalities;
+
+      // Joint weigths (diagonal version)
+      // TODO temporary. Remove asap by using eigen_matrix in the cpf file.
+      RTT::OutputPort<Eigen::VectorXd> Wy_diag_port;
+      Eigen::VectorXd Wy_diag;
     };
 
     std::vector<Priority*> priorities;
